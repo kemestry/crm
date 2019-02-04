@@ -1,0 +1,30 @@
+{#
+	Product / Edit
+#}
+
+{% extends "layout/html.html" %}
+
+{% block body %}
+
+<form action="/search" method="get">
+	<div class="input-group">
+		<input class="form-control" name="q" placeholder="Enter Product Code" value="{{ q }}">
+		<div class="input-group-append">
+			<button class="btn btn-outline-primary">Search</button>
+		</div>
+	</diV>
+</form>
+
+{% if q %}
+	{% if pk %}
+		<div class="mt-4">
+			<div class="alert alert-warning">Some Result Found, Should Redirect</h1>
+		</div>
+	{% else %}
+		<div class="mt-4">
+			<div class="alert alert-warning">Results not Found</div>
+		</div>
+	{% endif %}
+{% endif %}
+
+{% endblock %}

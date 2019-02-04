@@ -37,7 +37,9 @@ class Home extends \OpenTHC\Controller\Base
 		//$sql.= ' AND crm_transfer.full_price > 0';
 		switch ($_GET['view']) {
 		case 'a':
-			$sql.= " AND crm_transfer.completed_at >= now() - '3 months'::interval AND crm_transfer.stat NOT IN (410)";
+			$sql.= " AND crm_transfer.completed_at >= now() - '3 months'::interval";
+			$sql.= ' AND crm_transfer.stat NOT IN (410)';
+			$sql.= ' AND crm_transfer.full_price > 0';
 			break;
 		case 'd': // Drifting
 			$sql = 'SELECT license.id, license.name, license.code';

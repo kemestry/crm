@@ -7,6 +7,7 @@
 		<th>Role</th>
 		<th>Email</th>
 		<th>Phone</th>
+		<th></th>
 	</tr>
 </thead>
 <tbody>
@@ -17,7 +18,7 @@
 		<td>{{ c.email }}</td>
 		<td>{{ c.phone }}</td>
 		<td class="r">
-			<a href="/contact/edit"><i class="fas fa-edit"></i></a>
+			<a class="btn btn-sm" href="/contact/edit?id={{ c.id }}"><i class="fas fa-edit"></i></a>
 		</td>
 	</tr>
 {% endfor %}

@@ -57,10 +57,18 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs&amp;libraries=places"></script>
 <script src="https://directory.openthc.com/js/map.js"></script>
 <script src="https://directory.openthc.com/js/map-geo.js"></script>
-<script src="https://directory.openthc.com/js/map-marker.js"></script>
 <!--
--->s
+<script src="https://directory.openthc.com/js/map-marker.js"></script>
+-->
 <script>
+var Inf = new google.maps.InfoWindow({
+	content: '<h2>Marker</h2>'
+});
+
+var Map_Drop_List = {};
+var Map_Line_List = [];
+var Map_Mark_List = [];
+
 // (function() {
 // 	var ogf = marker_create;
 //
@@ -204,21 +212,13 @@ $(function() {
 
 	});
 
-	OPM.addListener('dragend', function() {
-		_map_license_search();
-	});
-
 	OPM.addListener('idle', function() {
 
-		if (!init_map_done) {
-
-			var arg = {
-				q: $('#map-search-term').val(),
-				type: $('#map-search-type').val(),
-			};
-			// /_map_license_search(arg);
-			init_map_done = true;
+		if (init_map_done) {
+			return(null);
 		}
+
+		init_map_done = true;
 
 		var args = {
 			q: $('#map-search-term').val(),
@@ -247,10 +247,10 @@ $(function() {
 			type: $('#map-search-type').val(),
 		};
 
-		_map_license_search(arg, function() {
-			$b.removeAttr('disabled');
-			$b.html('Search');
-		});
+		// _map_license_search(arg, function() {
+		// 	$b.removeAttr('disabled');
+		// 	$b.html('Search');
+		// });
 
 	});
 

@@ -1,0 +1,64 @@
+{#
+	Product / Edit
+#}
+
+{% extends "layout/html.html" %}
+
+{% block body %}
+
+<h1>Reports</h1>
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="list-group">
+			<a class="list-group-item" href="#">Total Sales Over Time</a>
+			<a class="list-group-item" href="#">Total Yearly Sales Comparison</a>
+			<a class="list-group-item" href="#">Total Sales by Products</a>
+			<a class="list-group-item" href="#">Total Sales by Customers</a>
+			<a class="list-group-item" href="#">Total Sales by Category</a>
+			<a class="list-group-item" href="#">Total Sales by Zip</a>
+			<a class="list-group-item" href="#">Total Average Order Size</a>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="list-group">
+			<a class="list-group-item" href="#">Product Sales Over Time</a>
+			<a class="list-group-item" href="#">Product Yearly Sales Comparison</a>
+			<a class="list-group-item" href="#">Product Sales by Customers</a>
+			<a class="list-group-item" href="#">Product Sales by Zip code</a>
+			<a class="list-group-item" href="#">Product Distribution by Customers</a>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="list-group">
+			<a class="list-group-item" href="#">Customer Sales Over Time</a>
+			<a class="list-group-item" href="#">Customer Yearly Sales Comparison</a>
+			<a class="list-group-item" href="#">Customer Sales by Products</a>
+			<a class="list-group-item" href="#">Customer Sales by Category</a>
+			<a class="list-group-item" href="#">Customer Avg Order Size</a>
+			<a class="list-group-item" href="#">Up-sell Opportunities</a>
+
+		</div>
+	</div>
+</div>
+
+<pre>
+## Summary Reports
+
+Customer Penetration
+Customer Acquisitions
+Customer Attrition
+-- New Licensees
+-- Total sales by Salespersons
+-- Total sales on map
+
+
+## Salesperson
+--Sales Over Time
+--Yearly Sales Comparison
+--Sales by Product
+--Sales by Customer
+--Sales by Category
+</pre>
+
+{% endblock %}

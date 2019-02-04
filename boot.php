@@ -57,6 +57,7 @@ function _leafdata_product_type_nice($t0,$t1)
 	case 'end_product/infused_mix':
 		return 'Mix/Infused';
 	case 'end_product/usable_marijuana':
+	case 'harvest_materials/flower_lots':
 		return 'Flower';
 	default:
 		return $x;
