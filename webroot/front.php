@@ -29,6 +29,10 @@ $app->get('/home', 'App\Controller\Home')
 ->add('App\Middleware\Session');
 
 
+$app->get('/pwig', function($REQ, $RES) {
+	return $this->pwig->render($RES, 'client/view.php', $data);
+});
+
 // Sync
 $app->get('/sync', 'App\Controller\Sync')
 ->add('App\Middleware\Menu')
@@ -120,6 +124,12 @@ $app->get('/feedback/{code}', function($REQ, $RES, $ARG) {
 
 // Search Lander
 $app->get('/search', 'App\Controller\Search')
+->add('App\Middleware\Menu')
+->add('App\Middleware\Session');
+
+
+// Settings
+$app->get('/settings', 'App\Controller\Settings')
 ->add('App\Middleware\Menu')
 ->add('App\Middleware\Session');
 

@@ -73,6 +73,7 @@ class Sync extends \OpenTHC\Controller\Base
 			$Lot = $res['result'];
 
 			// Product+Cache
+			$Product = array();
 			$x = $RC->get('/cache/' . $rec['global_inventory_type_id']);
 			if (!empty($x)) {
 				$Product = json_decode($x, true);
@@ -85,9 +86,18 @@ class Sync extends \OpenTHC\Controller\Base
 
 			$Strain = array();
 			if (empty($rec['global_strain_id']) && empty($rec['strain_name'])) {
+
 				$Strain = array(
 					'name' => '- None -'
 				);
+
+				// Guess
+				$x = $rec['description'];
+				$x = str_replace($rec['inventory_name'], null, $x);
+				$x = preg_replace('/ WA[\w\. ]+$/', null, $x);
+
+				$Strain['name'] = trim($x);
+
 			} else {
 				$x = $RC->get('/cache/' . $rec['global_strain_id']);
 				if (!empty($x)) {

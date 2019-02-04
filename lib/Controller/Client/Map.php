@@ -67,6 +67,8 @@ EOS;
 		$data['license_type_list'][] = array('type' => 'Laboratory');
 		$data['license_type_list'][] = array('type' => 'Carrier');
 
+		$data['Origin_License'] = $_SESSION['License'];
+
 		return $this->_container->view->render($RES, 'page/client/map.html', $data);
 
 	}

@@ -25,7 +25,7 @@ class Menu
 			'page' => array(
 				array(
 					'link' => '/auth',
-					'html' => '<i class="fas fa-sign-in"></i>',
+					'html' => '<i class="fas fa-sign-in-alt"></i>',
 				)
 			),
 		);
@@ -56,10 +56,10 @@ class Menu
 			);
 
 			$menu['page'] = array(
-				//array(
-				//	'link' => '/company/create',
-				//	'html' => '<i class="fas fa-check-square-o"></i> Create'
-				//),
+				array(
+					'link' => '/settings',
+					'html' => '<i class="fas fa-cogs"></i>'
+				),
 				array(
 					'link' => '/auth/shut',
 					'html' => '<i class="fas fa-power-off"></i>',

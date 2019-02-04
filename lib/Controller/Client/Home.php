@@ -32,8 +32,8 @@ class Home extends \OpenTHC\Controller\Base
 		$sql.= ', max(crm_transfer.completed_at) AS d';
 		$sql.= ' FROM crm_transfer';
 		$sql.= ' JOIN license ON crm_transfer.target_license_id = license.id';
-		//$sql.= ' LEFT JOIN crm_client ON crm_transfer.target_license_id = crm_client.license_id_about';
-		$sql.= ' WHERE crm_transfer.company_id = :c '; // AND crm_client.company_id_owner = :c';
+		//$sql.= ' LEFT JOIN crm_license ON crm_transfer.target_license_id = crm_license.license_id_about';
+		$sql.= ' WHERE crm_transfer.company_id = :c '; // AND crm_license.company_id_owner = :c';
 		//$sql.= ' AND crm_transfer.full_price > 0';
 		switch ($_GET['view']) {
 		case 'a':
@@ -48,8 +48,8 @@ class Home extends \OpenTHC\Controller\Base
 			$sql.= ', max(crm_transfer.completed_at) AS d';
 			$sql.= ' FROM crm_transfer';
 			$sql.= ' JOIN license ON crm_transfer.target_license_id = license.id';
-			//$sql.= ' LEFT JOIN crm_client ON crm_transfer.target_license_id = crm_client.license_id_about';
-			$sql.= ' WHERE crm_transfer.company_id = :c '; // AND crm_client.company_id_owner = :c';
+			//$sql.= ' LEFT JOIN crm_license ON crm_transfer.target_license_id = crm_license.license_id_about';
+			$sql.= ' WHERE crm_transfer.company_id = :c '; // AND crm_license.company_id_owner = :c';
 			$sql.= " AND crm_transfer.completed_at <= now() - '3 months'::interval";
 			break;
 		case 'p': // Prospects
@@ -74,8 +74,8 @@ class Home extends \OpenTHC\Controller\Base
 			$sql.= ', max(crm_transfer.completed_at) AS d';
 			$sql.= ' FROM crm_transfer';
 			$sql.= ' JOIN license ON crm_transfer.target_license_id = license.id';
-			//$sql.= ' LEFT JOIN crm_client ON crm_transfer.target_license_id = crm_client.license_id_about';
-			$sql.= ' WHERE crm_transfer.company_id = :c '; // AND crm_client.company_id_owner = :c';
+			//$sql.= ' LEFT JOIN crm_license ON crm_transfer.target_license_id = crm_license.license_id_about';
+			$sql.= ' WHERE crm_transfer.company_id = :c '; // AND crm_license.company_id_owner = :c';
 			$sql.= " AND target_license_id IN (SELECT license_id FROM $tab)";
 
 			break;

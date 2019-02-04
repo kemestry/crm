@@ -46,7 +46,7 @@ class View extends \OpenTHC\Controller\Base
 		$data['client_license']['phone_nice'] = $p['nice'];
 
 		// Account Primary Contact in Target Company
-		$sql = 'SELECT * FROM contact JOIN crm_client ON contact.id = crm_client.contact_id_account WHERE contact.company_id = :c AND license.id = :l';
+		$sql = 'SELECT * FROM contact JOIN crm_license ON contact.id = crm_license.contact_id_account WHERE contact.company_id = :c AND license.id = :l';
 		$arg = array(
 			':c' => $_SESSION['Company']['id'],
 			':l' => $data['client_license']['id'],
@@ -60,7 +60,7 @@ class View extends \OpenTHC\Controller\Base
 			'name' => '- Not Assigned -',
 		);
 		// Contacts in my company
-		$sql = 'SELECT * FROM contact JOIN crm_client ON contact.id = crm_client.contact_id_account WHERE contact.company_id = :c';
+		$sql = 'SELECT * FROM contact JOIN crm_license ON contact.id = crm_license.contact_id_account WHERE contact.company_id = :c';
 		$arg = array(
 			':c' => $_SESSION['Company']['id'],
 			//':l' => $data['client_license']['id'],

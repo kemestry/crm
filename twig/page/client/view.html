@@ -34,6 +34,11 @@
 	<div class="col-md-3">
 		<div id="license-map" style="background: #ccc; width:100%; height:240px;"></div>
 		<div>{{ macros.google_map_link_address(License.address_full) }}</div>
+		<div class="row">
+			<div class="col"><span id="target-license-rdm">{{ License.route_dist }}</span></div>
+			<div class="col"><span id="target-license-rts">{{ License.route_time }}</span></div>
+		</div>
+		<button id="route-update" type="button">Route Update</button>
 	</div>
 </div>
 
@@ -144,9 +149,12 @@
 	</li>
 </ul>
 </div>
-<div class="col-md-3 r">
+<div class="col-md-4 r">
 	<div class="btn-group btn-group-sm">
 		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-contact-create" type="button"><i class="fas fa-plus"></i> Contact</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button">Task</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button">Phone</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button">Email</button>
 		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button"><i class="fas fa-comment"></i> Note</button>
 	</div>
 </div>
@@ -220,6 +228,8 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs"></script>
 <!-- <script src="/js/map.js"></script> -->
 <script>
+var Origin_License_pt = new google.maps.LatLng({{ Origin_License.geo_lat }}, {{ Origin_License.geo_lon }});
+var Target_License_pt = new google.maps.LatLng({{ Target_License.geo_lat }}, {{ Target_License.geo_lon }});
 $(function() {
 
 	$('#contact-roles').select2();
@@ -275,12 +285,56 @@ $(function() {
 	};
 
 	var LGM = new google.maps.Map(div, opt);
-	//LGM.setCenter(cpt);
+
+	window.dirService = new google.maps.DirectionsService;
+	window.dirDisplay = new google.maps.DirectionsRenderer({
+		draggable: false,
+		map: LGM,
+		suppressInfoWindows: true,
+		suppressMarkers: true,
+	});
+
 	var pin = new google.maps.Marker({
 		map: LGM,
 		position: cpt,
 		draggable: false,
 		dragCrossMove: false,
+	});
+
+	$('#route-update').on('click', function() {
+
+		window.dirService.route({
+			origin: Origin_License_pt,
+			destination: Target_License_pt,
+			travelMode: 'DRIVING'
+		}, function(data, stat) {
+			switch (stat) {
+			case 'OK':
+				var leg = data.routes[0].legs[0];
+
+				$('#target-license-rdm').html(leg.distance.text);
+				$('#target-license-rts').html(leg.duration.text);
+
+				window.dirDisplay.setDirections(data);
+
+				var d_m = leg.distance.value; // Distance in Meters
+				var t_s = leg.duration.value; // Time in Seconds?
+
+				var arg = {
+					a: 'update-route',
+					m: leg.distance.value,
+					s: leg.duration.value
+				};
+				$.post('', arg, function(x) {
+					debugger;
+				})
+
+				break;
+				// $.post('/clent/update/')
+			default:
+				alert('Directions request failed due to ' + stat);
+			}
+		});
 	});
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -294,7 +348,7 @@ $(function() {
 			});
 
 		}
-	})
+	});
 
 });
 </script>
