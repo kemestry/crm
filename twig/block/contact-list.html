@@ -1,0 +1,26 @@
+
+<div class="table-responsive">
+<table class="table table-sm" id="transfer-table">
+<thead class="thead-dark">
+	<tr>
+		<th>Name</th>
+		<th>Role</th>
+		<th>Email</th>
+		<th>Phone</th>
+	</tr>
+</thead>
+<tbody>
+{% for c in contact_list %}
+	<tr>
+		<td>{{ c.name }}</td>
+		<td>{{ c.role }}</td>
+		<td>{{ c.email }}</td>
+		<td>{{ c.phone }}</td>
+		<td class="r">
+			<a href="/contact/edit"><i class="fas fa-edit"></i></a>
+		</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>

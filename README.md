@@ -1,0 +1,1 @@
+create table crm_client (id bigserial primary key, company_id_owner bigint not null references company(id), license_id_about bigint not null references license(id), contact_id_primary bigint references contact(id), contact_id_account bigint references contact(id));

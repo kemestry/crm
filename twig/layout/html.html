@@ -1,0 +1,92 @@
+{% extends "layout/html-pub.html" %}
+
+{% block html_head_link %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" integrity="sha256-xJOZHfpxLR/uhh1BwYFS5fhmOAdIRQaiOul5F/b7v3s=" crossorigin="anonymous" />
+<style>
+body {
+	font-family: Verdana,-apple-system,sans-serif;
+}
+
+/**
+	Select2 Class overrides
+	:mode=css:
+*/
+.select2-container--default {
+  min-width: 20em;
+  /* Select Arrow */
+}
+.select2-container--default .select2-selection--single {
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  height: calc(2.25rem + 2px);
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: inherit;
+  overflow: hidden;
+  padding: .375rem .75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 100%;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 20px;
+}
+.select2-container--default .select2-selection--multiple {
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  min-height: calc(2.25rem + 2px);
+}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  padding: 0 0 0 0.75rem;
+}
+.select2-container--default .select2-search__field::placholder {
+  color: #495057 !important;
+}
+.select2-container--default .select2-search__field::-webkit-input-placeholder {
+  color: #495057 !important;
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+	.container {
+		max-width: 100%;
+	}
+}
+</style>
+{% endblock %}
+
+{% block foot_script %}
+{{ parent() }}
+<!-- OPEN: app/layout/html.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js" integrity="sha256-FA14tBI8v+/1BtcH9XtJpcNbComBEpdawUZA6BPXRVw=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+google.charts.load("current", {packages:['bar', 'line', 'corechart' ]});
+var chart_options_pie = {
+	chartArea: {
+		top: '2%',
+		left: '2%',
+		width: '96%',
+		height: '96%',
+	},
+	legend: {
+		alignment: 'start',
+		position: 'right',
+	},
+	pieHole: 0.4,
+	pieSliceText: 'value',
+	pieSliceTextStyle: {
+		fontSize: 24
+	},
+	tooltip: {
+		trigger: 'selection',
+	}
+}
+</script>
+<!-- SHUT: app/layout/html.html -->
+{% endblock %}

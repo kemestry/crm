@@ -1,0 +1,324 @@
+
+{% extends "layout/html.html" %}
+
+{% block body %}
+</div> <!-- HACK: Close Bullshit Body Container -->
+
+<div class="container-fluid">
+<div class="row mt-4">
+
+<div class="col">
+<div class="form-group">
+	<input class="form-control" id="map-search-term" name="q" placeholder="Search" type="text" value="{{ q }}">
+</div>
+</div>
+
+<div class="col">
+<div class="form-group">
+	<select class="form-control" id="map-search-type" name="t">
+		<option selected value="">- All License Types -</option>
+	{% for l in license_type_list %}
+		<option
+			{{ license_type_pick == l.type ? "selected" }}
+			value="{{ l.type }}">{{ l.type }}</option>
+	{% endfor %}
+	</select>
+</div>
+</div>
+
+<div class="col">
+<div class="form-group">
+	<button class="btn btn-outline-primary" id="map-search"><i class="fas fa-search"></i> Search</button>
+	<button class="btn btn-outline-danger map-mark-wipe"><i class="fas fa-ban"></i> Clear</button>
+	<button class="btn btn-outline-secondary" id="map-re-center"><i class="fas fa-crosshairs"></i></button>
+</div>
+</div>
+</div>
+
+
+<div style="border:2px solid #333; position: relative;">
+	<div id="google-map" style="width:100%; height:750px;"></div>
+	<div id="bounding-box-display-nw" style="position: absolute; top:0; left: 0;">NW</div>
+	<div id="bounding-box-display-se" style="position: absolute; bottom:0; right: 0;">SE</div>
+</div>
+
+<div>
+	<div id="bounding-box-display" style="text-align:center;"></div>
+</div>
+
+</div>
+
+<div> <!-- HACK re-open DIV to be closed by footer -->
+{% endblock %}
+
+{% block foot_script %}
+{{ parent() }}
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs&amp;libraries=places"></script>
+<script src="https://directory.openthc.com/js/map.js"></script>
+<script src="https://directory.openthc.com/js/map-geo.js"></script>
+<script src="https://directory.openthc.com/js/map-marker.js"></script>
+<!--
+-->s
+<script>
+// (function() {
+// 	var ogf = marker_create;
+//
+// 	var ret = ogf.apply(this);
+//
+// 	//window.marker_create =
+//
+// })();
+
+function marker_create(mark)
+{
+	console.log('marker_create');
+
+	var ol = 0;
+	var ot = 0;
+
+	var pt = new google.maps.LatLng(mark.geo_lat, mark.geo_lon);
+
+	var mk = new google.maps.Marker({
+		//animation: google.maps.Animation.BOUNCE,
+		//animation: google.maps.Animation.DROP,
+		map: OPM,
+		draggable:false,
+		dragCrossMove:false,
+		label: mark.license_type.substring(0, 1),
+		icon: {
+			url: mark.marker.mark,
+			labelOrigin: new google.maps.Point(16, 10)
+			//fillColor: mark.marker.color,
+			//fillOpacity: 1,
+			//path: 'M22-48h-44v43h16l6 5 6-5h16z', // google.maps.SymbolPath.CIRCLE,
+			//strokeColor: mark.marker.color,
+		},
+		position: pt,
+		data: mark,
+	});
+
+	mk.addListener('click', function(e) {
+		crm_marker_window(this);
+	});
+
+	Map_Mark_List.push(mk);
+
+	return mk;
+}
+
+function crm_marker_window(mark)
+{
+	console.log('marker_window');
+
+	var html = '';
+	html += '<div style="border-left: 4px solid ' + mark.data.marker.color + '; padding-left: 1em;">';
+	html += '<h2>';
+	html += '<a href="/client/' + mark.data.license_code + '" target="_blank">';
+	html += mark.data.name;
+	html += '</a>';
+	html += '</h2>';
+	html += '<h3>License: #' + mark.data.license_code + '</h3>';
+	html += '</div>';
+
+	Inf.open(OPM, mark);
+	Inf.setPosition( mark.getPosition() );
+	Inf.setContent(html);
+
+}
+
+
+$(function() {
+
+	var div = document.getElementById('google-map');
+	var opt = {
+		// draggable: false,
+		keyboardShortcuts: false,
+		// mapTypeControl: false,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		navigationControl: false,
+		// overviewMapControl: false,
+		// panControl: false,
+		rotateControl: false,
+		// scaleControl: false,
+		// scrollwheel: false,
+		streetViewControl: false,
+		styles: [
+			{
+				featureType: "poi",
+				elementType: "labels",
+				stylers: [
+					{
+						visibility: "off"
+					}
+				]
+			}
+		],
+		zoom: 14,
+		zoomControlOptions:{
+			style: google.maps.ZoomControlStyle.SMALL
+		}
+	};
+
+	var cpt = new google.maps.LatLng({{ center.latitude }}, {{ center.longitude }});
+
+	var x = localStorage.getItem('cpt');
+	if (x) {
+		cpt = new google.maps.LatLng(JSON.parse(x));
+	}
+
+	x = localStorage.getItem('cpz');
+	if (x) {
+		opt.zoom = parseInt(x, 10) || 10;
+	}
+
+
+	OPM = new google.maps.Map(div, opt);
+	OPM.setCenter(cpt);
+
+	OPM.addListener('bounds_changed', function() {
+
+		var rect = OPM.getBounds();
+		var ne = rect.getNorthEast();
+		var sw = rect.getSouthWest();
+
+		var text = [];
+		text.push('N:');
+		text.push(ne.lat());
+
+
+		text.push('S:');
+		text.push(sw.lat());
+		text.push('W:');
+		text.push(sw.lng());
+
+		text.push('E:');
+		text.push(ne.lng());
+
+		$('#bounding-box-display-nw').html( parseInt(ne.lat()) + ',' + parseInt(sw.lng()));
+		$('#bounding-box-display-se').html( parseInt(sw.lat()) + ',' + parseInt(ne.lng()));
+		$('#bounding-box-display').html(  text.join(' ') );
+
+		localStorage.setItem('cpt', JSON.stringify(OPM.getCenter().toJSON()) );
+		localStorage.setItem('cpz', JSON.stringify(OPM.getZoom()) );
+
+	});
+
+	OPM.addListener('dragend', function() {
+		_map_license_search();
+	});
+
+	OPM.addListener('idle', function() {
+
+		if (!init_map_done) {
+
+			var arg = {
+				q: $('#map-search-term').val(),
+				type: $('#map-search-type').val(),
+			};
+			// /_map_license_search(arg);
+			init_map_done = true;
+		}
+
+		var args = {
+			q: $('#map-search-term').val(),
+			t: $('#map-search-type').val(),
+			c: OPM.getCenter().toUrlValue(),
+			z: OPM.getZoom(),
+		};
+		var link = '/client/map?' + Object.keys(args).map(function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(args[k]); }).join('&');
+		$('#map-link').attr('href', link);
+
+	});
+
+	$('.map-mark-wipe').on('click', function() {
+		marker_delete();
+	});
+
+	$('#map-search').on('click', function() {
+
+		$b = $(this);
+		$b.attr('disabled', 'disabled');
+		$b.html('Search <i class="fas fa-sync fa-spin"></i>');
+
+		// Reload
+		var arg = {
+			q: $('#map-search-term').val(),
+			type: $('#map-search-type').val(),
+		};
+
+		_map_license_search(arg, function() {
+			$b.removeAttr('disabled');
+			$b.html('Search');
+		});
+
+	});
+
+	$('#map-re-center').on('click', function() {
+		askGeolocation(OPM);
+	});
+
+	var opts = {
+		types: ['(cities)'],
+		componentRestrictions: {
+			country: "us"
+		}
+	};
+	var autocomplete = new google.maps.places.Autocomplete( document.getElementById('map-search-term'), opts );
+	autocomplete.bindTo('bounds', OPM);
+	autocomplete.addListener('place_changed', function(e) {
+
+		//infowindow.close();
+		//marker.setVisible(false);
+		var place = autocomplete.getPlace();
+
+		if (!place.geometry) {
+			// User entered the name of a Place that was not suggested and
+			// pressed the Enter key, or the Place Details request failed.
+			//window.alert("No details available for input: '" + place.name + "'");
+			return;
+		}
+
+
+		// If the place has a geometry, then present it on a map.
+		if (place.geometry.viewport) {
+			OPM.fitBounds(place.geometry.viewport);
+		} else {
+			OPM.setCenter(place.geometry.location);
+			//OPM.setZoom(17);  // Why 17? Because it looks good.
+		}
+
+		//marker.setPosition(place.geometry.location);
+		//marker.setVisible(true);
+		//
+		//var address = '';
+		//if (place.address_components) {
+		//address = [
+		//  (place.address_components[0] && place.address_components[0].short_name || ''),
+		//  (place.address_components[1] && place.address_components[1].short_name || ''),
+		//  (place.address_components[2] && place.address_components[2].short_name || '')
+		//].join(' ');
+		//}
+		//
+		//infowindowContent.children['place-icon'].src = place.icon;
+		//infowindowContent.children['place-name'].textContent = place.name;
+		//infowindowContent.children['place-address'].textContent = address;
+		//infowindow.open(map, marker);
+
+		$('#map-search-term').val('');
+
+	});
+
+	$.get('/client/map?a=list')
+		.done(function(ret) {
+			//marker_delete();
+			ret.forEach(function(n, i) {
+				var mk = marker_create(n);
+				//OMS.addMarker(mk);
+			});
+		});
+		//.always(cbfn);
+
+});
+</script>
+{% endblock %}

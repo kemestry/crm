@@ -1,0 +1,151 @@
+{#
+	Product / Create / Done
+#}
+
+{% extends "layout/html.html" %}
+
+{% block body %}
+
+<h1>Transfers</h1>
+
+{% if sync %}
+	<p class="alert alert-warning">Not all items are fully loaded from backend system, update in progress</p>
+{% endif %}
+
+
+<div class="row mt-4">
+<div class="col">
+	<div id="transfer-chart" style="height: 320px;"></div>
+</div>
+</div>
+
+<hr>
+
+<!--
+<p>Transfers: {{ transfer_stat.t_count }}</p>
+<p>Total Transfer Revenue:  {{ transfer_stat.r_sum }}</p>
+<p>Average Transfer Amount:  {{ transfer_stat.r_avg }}</p>
+-->
+
+<div class="table-responsive">
+<table class="table table-sm">
+<thead class="thead-dark">
+	<tr>
+		<th>Order</th>
+		<th>Date</th>
+		<th>Client</th>
+		<th>Status</th>
+		<th class="r">Revenue</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+{% for t in transfer_list %}
+	<tr class="transfer">
+		<td><a href="/transfer/{{ t.guid }}">{{ t.guid_nice }}</a></td>
+		<td>{{ t.date_nice }}</td>
+		<td><a href="/client/{{ t.target_license_code }}">{{ t.target_license_name }}</a></td>
+		<td>{{ t.stat }}</td>
+		<!-- <td class="r">{{ t.c }}</td> -->
+		<td class="r">{{ t.full_price }}</td>
+		<td class="r">
+			<button class="btn btn-sm btn-outline-secondary btn-sync"
+				data-guid="{{ t.guid }}"
+				data-sync="{{ t.flag_sync }}"><i class="fas fa-sync"></i></button>
+		</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+{% endblock %}
+
+{% block foot_script %}
+{{ parent() }}
+<script>
+var sync_wait = 2000;
+
+function doOneSync()
+{
+	// Find One
+	var $btn = null;
+	$('.transfer').each(function(i, n) {
+		var x = $(n).find('.btn-sync');
+		if ('0' == x.data('sync')) {
+			$btn = x;
+			return(false);
+		}
+	});
+
+	// Nothing to do
+	if (!$btn) {
+		return(false);
+	}
+
+	var arg = {
+		a: 'sync',
+	};
+
+	$btn.addClass('btn-outline-danger');
+	$btn.find('i').addClass('fa-spin');
+	$btn.data('sync', '1');
+	$.post('/transfer/' + $btn.data('guid') + '/sync', arg, function() {
+		$btn.find('i').removeClass('fa-spin');
+		$btn.removeClass('btn-outline-danger');
+		setTimeout(doOneSync, sync_wait);
+	});
+}
+$(function() {
+
+	google.charts.setOnLoadCallback(function() {
+
+		$.get('/chart/transfer-timeline', function(body) {
+
+			var data = google.visualization.arrayToDataTable(body);
+			data.setColumnProperty(0, 'type', 'number');
+			data.setColumnProperty(0, 'type', 'number');
+
+			var opts = {
+				axes: {
+					C: { label: 'Counts' },
+					R: { label: 'Revenue' }
+				},
+				// chartArea: {
+				// 	top: 0,
+				// 	left: 0,
+				// 	width: '100%',
+				// 	height: '100%',
+				// },
+				// curveType: 'function',
+				hAxis: {
+					title: '',
+				},
+				legend: {
+					position: 'none'
+				},
+				lineWidth: 2,
+				series: {
+					0: { axis: 'C', targetAxisIndex: 0, lineWidth: 3 },
+					1: { axis: 'C', targetAxisIndex: 0, lineWidth: 3 },
+					2: { axis: 'R', targetAxisIndex: 1, lineWidth: 4 }
+				},
+				trendlines: {
+					0: { visibleInLegend: true },
+					//1: {},
+					//2: { type: 'linear', color: 'green', lineWidth: 10 }
+				}
+			};
+			//var chart = new google.visualization.LineChart(document.getElementById('transfer-chart'));
+			var chart = new google.charts.Line(document.getElementById('transfer-chart'));
+			opts = google.charts.Line.convertOptions(opts);
+			chart.draw(data, opts);
+		});
+
+	});
+
+	setTimeout(doOneSync, sync_wait);
+
+});
+</script>
+{% endblock %}

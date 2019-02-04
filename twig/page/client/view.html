@@ -1,0 +1,303 @@
+{#
+	Product / Create / Done
+#}
+
+{% extends "layout/html.html" %}
+{% import 'macros.html' as macros %}
+
+{% block body %}
+
+<div class="row mt-4">
+<div class="col">
+	<h1>{{ License.name }}
+	<small><code>{{ License.code }}</code></small>
+	<small style="font-size: 40%;">
+		<a class="btn btn-sm" href="{{ Company.weblink_meta.website ?: "#" }}" target="_blank">Website</a>
+		<a class="btn btn-sm" href="https://directory.openthc.com/company?id={{ License.company_id }}" target="_blank"><i class="fas fa-address-book"></i></a>
+	</small>
+	</h1>
+</div>
+<div class="col-md-3 r">
+	<div class="btn-group btn-group-sm">
+		<button class="btn btn-outline-primary" data-toggle="modal" data-target="#modal-contact-create"><i class="fas fa-plus"></i> Contact</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button"><i class="fas fa-comment"></i> Note</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-license-modify" type="button"><i class="fas fa-edit"></i></button>
+	</div>
+</div>
+</div>
+
+<div class="row">
+	<div class="col-md-9" style="position:relative;">
+		<div style="background: #ddd; height: 260px;" id="client-revenue-chart"></div>
+		<div ><h2 class="c">Total Revenue: ${{ transfer_stat.revenue }}</h2></div>
+	</div>
+	<div class="col-md-3">
+		<div id="license-map" style="background: #ccc; width:100%; height:240px;"></div>
+		<div>{{ macros.google_map_link_address(License.address_full) }}</div>
+	</div>
+</div>
+
+<hr>
+
+<style>
+.card-stat h3 {
+	text-align: center;
+	margin: 0;
+}
+.card-stat p {
+	font-size: 80%;
+	margin: 0;
+	text-align: center;
+}
+</style>
+
+<div class="row">
+	<div class="col-md-3">
+		<div class="card card-stat">
+			<div class="card-body">
+				<h3>{{ transfer_stat.avg_days }}/days</h3>
+				<p>Average Order Interval</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card card-stat">
+			<div class="card-body">
+				<h3>{{ transfer_stat.avg_lot_count }}</h3>
+				<p>Average Lot Count</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card card-stat">
+			<div class="card-body">
+				<h3>{{ transfer_stat.avg_unit_count }}</h3>
+				<p>Average Units</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="card card-stat">
+			<div class="card-body">
+				<h3>${{ transfer_stat.avg_revenue }}</h3>
+				<p>Average Revenue</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr>
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="list-group">
+			<div class="list-group-item">Phone: <a href="tel:{{ License.phone_e164 }}">{{ License.phone_nice }}</a></div>
+			<div class="list-group-item d-flex justify-content-between align-items-center">Transfers: <span class="badge badge-success badge-pill">{{ transfer_stat.t_count }}</span></div>
+			<div class="list-group-item d-flex justify-content-between align-items-center">Lots: <span class="badge badge-success badge-pill">{{ transfer_stat.l_count }}</span></div>
+			<div class="list-group-item d-flex justify-content-between align-items-center">Units: <span class="badge badge-success badge-pill">{{ transfer_stat.u_count }}</span></div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<h4>Contact Details</h4>
+		<div class="form-group">
+			<label>Owner/Primary</label>
+			<input class="form-control" value="{{ Contact0.name }}">
+		</div>
+		<div class="form-group">
+			<label>Buyer/Manager</label>
+			<input class="form-control" value="{{ Contact1.name }}">
+		</div>
+		<!--
+		<p>Primary: <a href="{{ Contact0.link }}"></a></p>
+		<p>Buyer: <a href="{{ Contact1.link }}">{{ Contact1.name }}</a></p>
+		-->
+	</div>
+	<div class="col-md-4">
+		<h4>Account</h4>
+		<div class="form-group">
+			<label>Manager</label>
+			<div class="input-group">
+				<input class="form-control" value="{{ Manager.name }}">
+				<div class="input-group-append">
+					<!-- @todo if empty make a ++ button -->
+					<a class="btn btn-outline-secondary" href="{{ Manager.link }}">XX</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr>
+
+
+<div class="row">
+<div class="col">
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link active" data-toggle="tab" data-target="#history-t" href="#history-t">Orders</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" data-target="#journal-list" href="#journal-list">Journal</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" data-target="#contact-list" href="#contact-list">Contacts</a>
+	</li>
+</ul>
+</div>
+<div class="col-md-3 r">
+	<div class="btn-group btn-group-sm">
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-contact-create" type="button"><i class="fas fa-plus"></i> Contact</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button"><i class="fas fa-comment"></i> Note</button>
+	</div>
+</div>
+</div>
+
+<div class="tab-content">
+
+<div class="tab-pane active" id="history-t">
+<div class="table-responsive">
+<table class="table table-sm" id="transfer-table">
+	<thead class="thead-dark">
+		<tr>
+			<th>Order</th>
+			<th>Date</th>
+			<th>Status</th>
+			<th class="r">Lots</th>
+			<th class="r">Revenue</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for t in transfer_list %}
+		<tr class="transfer">
+			<td><a href="/transfer/{{ t.guid }}">{{ t.guid_nice }}</a></td>
+			<td>{{ t.completed_at }}</td>
+			<td>{{ t.stat }}</td>
+			<td class="r">{{ t.lot_count }}</td>
+			<td class="r">{{ t.full_price }}</td>
+			<!--
+			<td class="r">
+				<button class="btn btn-sm btn-outline-secondary btn-sync"
+					data-guid="{{ t.guid }}"
+					data-sync="{{ t.flag_sync }}"><i class="fas fa-sync"></i></button>
+			</td>
+			-->
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+</div>
+</div>
+
+<div class="tab-pane" id="journal-list" style="min-height: 20vh;">
+<div class="table-responsive">
+	<h2>Journal</h2>
+	<div class="loading"><i class="fas fa-sync fa-spin"></i>Loading</div>
+</div>
+</div>
+
+<div class="tab-pane" id="contact-list" style="min-height: 20vh;">
+<div class="table-responsive">
+	<h2>Contacts</h2>
+	<div class="loading"><i class="fas fa-sync fa-spin"></i>Loading</div>
+</div>
+</div>
+
+</div>
+
+<div>
+{% for note in License_History %}
+
+
+{% endfor %}
+</div>
+
+{% include "modal/contact-create.html" %}
+{% include "modal/journal-create.html" %}
+{% include "modal/license-modify.html" %}
+
+{% endblock %}
+
+{% block foot_script %}
+{{ parent() }}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs"></script>
+<!-- <script src="/js/map.js"></script> -->
+<script>
+$(function() {
+
+	$('#contact-roles').select2();
+
+	google.charts.setOnLoadCallback(function() {
+		$.get('/chart/revenue-license-line?l={{ License.id }}', function(body) {
+
+			var data = google.visualization.arrayToDataTable(body);
+
+			var opts = {
+				bar: {
+					groupWidth: '90%',
+				},
+				chart: {
+					title: '',
+				},
+				chartArea: {
+					top: '0',
+					left: '0',
+					width: '100%',
+					height: '100%',
+				},
+				legend: {
+					position: 'none',
+				},
+				lineWidth: 4
+			};
+			//var chart = new google.visualization.ColumnChart(document.getElementById('client-revenue-chart'));
+			opts = google.charts.Bar.convertOptions(opts);
+			var chart = new google.charts.Bar(document.getElementById('client-revenue-chart'));
+			chart.draw(data, opts);
+		});
+
+	});
+
+	$('#transfer-table').DataTable({
+		info: false,
+		order: [],
+		paging: false,
+		processing: true,
+		//ordering: false,
+		searching: false,
+	});
+
+	var cpt = new google.maps.LatLng({{ License.geo_lat }}, {{ License.geo_lon }});
+	var div = document.getElementById('license-map');
+	var opt = {
+		center: cpt,
+		disableDefaultUI: true,
+		draggable: false,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoom: 10,
+	};
+
+	var LGM = new google.maps.Map(div, opt);
+	//LGM.setCenter(cpt);
+	var pin = new google.maps.Marker({
+		map: LGM,
+		position: cpt,
+		draggable: false,
+		dragCrossMove: false,
+	});
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+		var $t = $(e.target.dataset.target);
+		if ($t.find('.loading').length) {
+
+			$.get('?v=' + $t[0].id, function(body, stat) {
+				$t.empty();
+				$t.html(body);
+			});
+
+		}
+	})
+
+});
+</script>
+{% endblock %}

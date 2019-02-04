@@ -1,0 +1,147 @@
+{#
+	View Transfer
+#}
+
+{% extends "layout/html.html" %}
+{% import 'macros.html' as macros %}
+
+{% block body %}
+
+<style>
+div.card {
+	height: 100%;
+}
+div.card h4 {
+	margin: 0;
+}
+div.card p {
+	margin: 0;
+}
+</style>
+
+<div class="row mt-2">
+	<div class="col-md-9"><h1>{{ transfer.guid }}</h1></div>
+	<div class="col-md-3 r">
+		<h3>
+		{% if transfer.meta.void %}
+			<span class="badge badge-danger">void/{{ transfer.meta.status }}</span>
+		{% else %}
+			<span class="badge badge-success">{{ transfer.meta.status }}</span>
+		{% endif %}
+		</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-9">
+		<h2>
+			<a href="/client/{{ client_license.code }}">{{ client_license.name }}</a>
+			/ {{ client_license.type }}
+			<small><code>{{ client_license.code }}</code></small>
+			<small>
+				<a class="btn" href="https://directory.openthc.com/license/{{ client_license.guid }}"><i class="fas fa-address-book"></i></a>
+			</small>
+		</h2>
+		<p>Phone: <a href="tel:{{ License.phone_e164 }}">{{ client_license.phone_nice }}</a></p>
+		<p>{{ macros.google_map_link_address(client_license.address_full) }}</p>
+	</div>
+	<div class="col-md-3 r"><h2>${{ transfer.full_price }}</h2></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="card">
+			<div class="card-header"><h4>Contact:</h4></div>
+			<div class="card-body">
+			{% if not client_contact.id %}
+				<a class="btn btn-outline-secondary" href="/contact/create?company_id={{ client_license.company_id }}"><i class="fas fa-user"></i> Add Contact</a>
+			{% else %}
+				<p>{{ client_contact.name }}</p>
+				<p>{{ client_contact.phone }}</p>
+				<p>{{ client_contact.email }}</p>
+			{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<div class="card">
+			<div class="card-header"><h4>Account Manager:</h4></div>
+			<div class="card-body">
+				{% if not manage_contact.id %}
+					<a class="btn btn-outline-secondary" href="/contact/create?company_id={{ transfer.company_id }}"><i class="fas fa-user"></i> Set Manager</a>
+				{% else %}
+					<p>{{ manage_contact.name }}</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<ul class="list-group">
+			<li class="list-group-item d-flex justify-content-between align-items-center">Lots: <span class="badge badge-success badge-pill">{{ transfer.lot_count }}</span></li>
+			<li class="list-group-item d-flex justify-content-between align-items-center">Packages: <span class="badge badge-success badge-pill">{{ transfer.package_count }}</span></li>
+			<!-- <li class="list-group-item">Packages: {{ transfer.package_count }}</li> -->
+			<!-- <li class="list-group-item">Average Unit Price</li> -->
+			<li class="list-group-item d-flex justify-content-between align-items-center">Ordered: <span class="badge">{{ transfer.created_at }}</span></li>
+			<li class="list-group-item d-flex justify-content-between align-items-center">Delivered: <span class="badge">{{ transfer.completed_at }}</span></li>
+		</ul>
+		<!-- <p>Driver: {{ transfer.meta.transporter_name1 }}</p> -->
+	</div>
+</div>
+
+<div class="table-responsive mt-4">
+<table class="table table-sm table-bordered">
+<thead class="thead-dark">
+	<tr>
+		<th>Product Type</th>
+		<th>Product</th>
+		<th>Strain</th>
+		<th class="r">Qty</th>
+		<th class="r">Unit Price</th>
+		<th class="r">Full Price</th>
+	</tr>
+</thead>
+<tbody>
+{% for ti in transfer_item_list %}
+	<tr>
+		<!-- <td>{{ ti.Item.global_id }}</td> -->
+		<!-- <td>{{ ti.Lot.global_id }}</td> -->
+		<td><a href="/report/product-type/{{ ti.meta.Product.global_id }}">{{ ti.meta.Item.product_type }}</a></td>
+		<td><a href="/report/product/{{ ti.meta.Product.global_id }}">{{ ti.product }}</a>
+			<!-- <br><small>{{ ti.meta.Item.description }} -->
+			{% if ti.meta.Item.is_sample %}
+				Sample: {{ ti.meta.Item._sample }}
+			{% endif %}
+		</td>
+		<td><a href="/report/strain/{{ ti.meta.Strain.global_id }}">{{ ti.strain }}</a></td>
+		<td class="r">{{ ti.package_qty }}</td>
+		<td class="r">{{ ti.unit_price }}</td>
+		<td class="r">{{ ti.full_price }}</td>
+	</tr>
+{% endfor %}
+</tbody>
+<tfoot>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td class="r"><strong>{{ transfer.full_price }}</strong></td>
+	</tr>
+</tfoot>
+</table>
+</div>
+
+
+<form method="post">
+<div class="form-actions">
+	<button class="btn btn-outline-secondary" name="a" type="submit" value="sync"><i class="fas fa-sync"></i> Sync</button>
+	<button class="btn btn-outline-primary" name="a" type="submit" value="share"><i class="fas fa-share-alt"></i> Share</button>
+	<button class="btn btn-outline-primary" name="a" type="submit" value="save"><i class="fas fa-save"></i> Modify</button>
+	<button class="btn btn-outline-secondary" name="a" type="submit" value="mute"><i class="fas fa-ban"></i> Mute</button>
+	<button class="btn btn-outline-danger" name="a" type="submit" value="void"><i class="fas fa-trash"></i> Void</button>
+</div>
+</form>
+
+
+{% endblock %}

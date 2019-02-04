@@ -1,0 +1,158 @@
+{#
+	Product / Edit
+#}
+
+{% extends "layout/html.html" %}
+
+{% block body %}
+
+<style>
+.table-calendar {
+	width: 100%;
+}
+.table-calendar td {
+	position: relative;
+	height: 64px;
+	vertical-align: bottom;
+	width: 14.28571428;
+}
+.table-calendar td .dom-wrap {
+	font-size: 80%;
+	text-align: right;
+	position: absolute;
+	right: .3rem;
+	top: 0;
+}
+.table-calendar td .cal-item {
+	background: #d0d0d0;
+	margin: 0 0 0.3rem 0;
+	padding: 0 0 0 0.3rem;
+}
+</style>
+
+<div class="row">
+<div class="col-md-8">
+	<h2>Revenues</h2>
+	<div id="chart-revenue-home" style="height:240px;"></div>
+</div>
+<div class="col-md-4">
+	<h2>Product Types</h2>
+	<div id="chart-product-type-pie" style="height:240px;"></div>
+</div>
+</div>
+
+<hr>
+
+<!--
+<h2>Product Revenues</h2>
+<div id="chart-revenue-product-home" style="height:240px;"></div>
+<hr>
+-->
+
+<div class="row">
+<div class="col">
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link active" data-toggle="tab" data-target="#journal-agenda-view" href="#journal-agenda-view">Agenda</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" data-toggle="tab" data-target="#journal-calendar-view" href="#journal-calendar-view">Calendar</a>
+	</li>
+</ul>
+</div>
+<div class="col-md-3 r">
+	<div class="btn-group btn-group-sm">
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-contact-create" type="button"><i class="fas fa-plus"></i> Contact</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button"><i class="fas fa-comment"></i> Note</button>
+	</div>
+</div>
+</div>
+
+<div class="tab-content">
+<div class="tab-pane active" id="journal-agenda-view" style="min-height:30vh;">
+	<h3>Agenda</h3>
+	<div>
+	</div>
+</div>
+
+
+<div class="tab-pane" id="journal-calendar-view">
+	<h3>Calendar</h3>
+	<div class="table-responsive">
+		<table class="table table-sm table-bordered table-calendar">
+		<thead class="thead-dark">
+			<tr>
+				{% for d in dow_list %}
+					<th class="c">{{ d }}</th>
+				{% endfor %}
+			</tr>
+		</thead>
+		<tbody>
+		{% for w in week_list %}
+			<tr>
+			{% for d in w.day_list %}
+				<td class="{{ pick ? " active" }}">
+					<div class="dom-wrap">{{ d.name }}</div>
+					{% for e in d.evt_list %}
+						<div class="cal-item">{{ e }}</div>
+					{% endfor %}
+				</td>
+			{% endfor %}
+			</tr>
+		{% endfor %}
+		</tbody>
+		</table>
+	</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block foot_script %}
+{{ parent() }}
+<script>
+google.charts.setOnLoadCallback(function() {
+	$.get('/chart/revenue-line', function(body) {
+		debugger;
+		var data = google.visualization.arrayToDataTable(body);
+
+		var opts = {
+			bar: {
+				groupWidth: '90%',
+			},
+			chart: {
+				title: '',
+			},
+			legend: {
+				position: 'none',
+			}
+		};
+		var chart = new google.charts.Bar(document.getElementById('chart-revenue-home'));
+		opts = google.charts.Bar.convertOptions(opts);
+		chart.draw(data, opts);
+	});
+
+	$.get('/chart/pie-product-type-90d', function(body) {
+		var data = google.visualization.arrayToDataTable(body);
+		var opts = chart_options_pie;
+		opts.is3D = true;
+		opts.legend.position = 'none';
+
+		var chart = new google.visualization.PieChart(document.getElementById('chart-product-type-pie'));
+		chart.draw(data, opts);
+	});
+
+	$.get('/chart/revenue-product-type-90d', function(body) {
+		var data = google.visualization.arrayToDataTable(body);
+		//var opts = chart_options_pie;
+		//opts.is3D = true;
+		//opts.legend.position = 'none';
+		var opts = {};
+
+		var chart = new google.visualization.ColumnChart(document.getElementById('chart-revenue-product-home'));
+		chart.draw(data, opts);
+	});
+
+});
+</script>
+{% endblock %}

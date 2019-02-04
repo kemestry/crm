@@ -1,0 +1,15 @@
+# Directories
+
+custom/
+etc/ssl/
+node_modules/
+public/
+var/
+vendor/
+
+# Files
+composer.lock
+composer.phar
+doc/swagger.yaml
+doxygen_sqlite3.db
+etc/app.ini

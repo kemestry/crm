@@ -1,0 +1,78 @@
+{#
+	Product / Create / Done
+#}
+
+{% extends "layout/html.html" %}
+
+{% block body %}
+<div class="container-fluid">
+
+<h1>Clients :: {{ client_list|length }}</h1>
+
+<div class="row mt-2">
+<div class="col">
+	<a class="btn btn-outline-secondary" href="/client/map"><i class="fas fa-map"></i></a>
+	<div class="btn-group">
+		<a class="btn btn-outline-secondary{{ view_active == "m" ? " active" }}" href="{{ view_link_m }}"><i class="fas fa-asterisk"></i> All</a>
+		<a class="btn btn-outline-secondary{{ view_active == "a" ? " active" }}" href="{{ view_link_a }}">Active</a>
+		<a class="btn btn-outline-secondary{{ view_active == "p" ? " active" }}" href="{{ view_link_p }}">Prospects</a>
+		<a class="btn btn-outline-secondary{{ view_active == "d" ? " active" }}" href="{{ view_link_d }}">Drifting</a>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-outline-secondary{{ type_active == "a" ? " active" }}" href="{{ type_link_a }}"><i class="fas fa-asterisk"></i> All</a>
+		<a class="btn btn-outline-secondary{{ type_active == "g" ? " active" }}" href="{{ type_link_g }}"><i class="fas fa-leaf"></i> Producers</a>
+		<a class="btn btn-outline-secondary{{ type_active == "p" ? " active" }}" href="{{ type_link_p }}"><i class="fas fa-industry"></i> Processors</a>
+		<a class="btn btn-outline-secondary{{ type_active == "r" ? " active" }}" href="{{ type_link_r }}"><i class="fas fa-store-alt"></i> Retailers</a>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-outline-primary" href="/client/create"><i class="fas fa-plus"></i> Add Client</a>
+	</div>
+</div>
+</div>
+
+<div class="table-responsive mt-2">
+<table class="table" id="client-table">
+<thead class="thead-dark">
+	<tr>
+		<th>License</th>
+		<th>Name</th>
+		<th>Manager</th>
+		<th>Last Visit</th>
+		<th class="r">Visits</th>
+		<th class="r">Revenue</th>
+	</tr>
+</thead>
+<tbody>
+{% for c in client_list %}
+	<tr>
+		<td><a href="/client/{{ c.code }}">{{ c.code }}</a></td>
+		<td><a href="/client/{{ c.code }}">{{ c.name }}</a></td>
+		<td>X{{ c.manager }}</td>
+		<td class="c">{{ c.d }}</td>
+		<td class="r">{{ c.c }}</td>
+		<td class="r">{{ c.r }}</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block foot_script %}
+{{ parent() }}
+<script>
+$(function() {
+	$('#client-table').DataTable({
+		info: false,
+		order: [],
+		paging: false,
+		processing: true,
+		//ordering: false,
+		searching: false,
+	});
+});
+</script>
+{% endblock %}

@@ -1,0 +1,5 @@
+
+
+{% macro google_map_link_address(a) %}
+	<a href="https://www.google.com/maps/search/{{ a|url_encode }}" target="_blank">{{ a }}</a>
+{% endmacro %}

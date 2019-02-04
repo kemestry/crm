@@ -1,0 +1,66 @@
+
+<form action="/client/journal/create" method="post">
+
+<div class="modal" id="modal-journal-create" role="dialog" tabindex="-1">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+
+<div class="modal-header">
+	<h4 class="modal-title">Journal :: Create</h4>
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+</div>
+
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-6">
+		<div class="form-group">
+			<label>Date:</label>
+			<input class="form-control" type="date" value="{{ date_iso }}">
+		</div>
+		</div>
+		<div class="col-md-6">
+		<div class="form-group">
+			<label>Type:</label>
+			<select class="form-control" name="type">
+				<option>Follow Up</option>
+				<option>Live Human</option>
+				<option>Phone Call</option>
+				<option>Phone Text</option>
+				<option>Email Sent</option>
+				<option>Note</option>
+			</select>
+		</div>
+		</div>
+	</div>
+
+	<div class="row">
+	<div class="col">
+		<div class="form-group">
+			<label>Contact:</label>
+			<select class="form-control" name="contact_id_about"></select>
+		</div>
+	</div>
+	</div>
+
+	<div class="row">
+	<div class="col">
+		<div class="form-group">
+			<label>Notes: <small>markdown</small></label>
+			<textarea class="form-control" name="note"></textarea>
+		</div>
+	</div>
+	</div>
+
+</div>
+
+<div class="modal-footer">
+	<input name="contact_id" type="hidden" value="{{ Contact.id }}">
+	<input name="license_id" type="hidden" value="{{ License.id }}">
+	<button class="btn btn-outline-primary" type="submit" value="contact-save"><i class="fas fa-save"></i> Save</button>
+</div>
+
+</div>
+</div>
+</div>
+
+</form>

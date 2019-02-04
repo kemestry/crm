@@ -1,0 +1,24 @@
+
+<div class="table-responsive">
+<table class="table table-sm" id="transfer-table">
+<thead class="thead-dark">
+	<tr>
+		<th>Date</th>
+		<th>Type</th>
+		<th>Contact</th>
+		<th>Note</th>
+	</tr>
+</thead>
+<tbody>
+{% for j in journal_list %}
+	<tr>
+		<td>{{ j.date_nice }}</td>
+		<td>{{ j.name }}</td>
+		<td>{{ j.contact_name }}</td>
+		<td>{{ j.note }}</td>
+		<td><button>X</button></td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
