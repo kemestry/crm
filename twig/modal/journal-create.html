@@ -15,20 +15,19 @@
 		<div class="col-md-6">
 		<div class="form-group">
 			<label>Type:</label>
-			<select class="form-control" name="type">
-				<option>Follow Up</option>
-				<option>Live Human</option>
-				<option>Phone Call</option>
-				<option>Phone Text</option>
-				<option>Email Sent</option>
-				<option>Note</option>
+			<select class="form-control" id="journal-type" name="type">
+				<option value="event">Task / Follow Up</option>
+				<option value="human">Live Human</option>
+				<option value="phone">Phone Call/Text</option>
+				<option value="email">Email Sent</option>
+				<option value="entry">General Note</option>
 			</select>
 		</div>
 		</div>
 		<div class="col-md-6">
 		<div class="form-group">
 			<label>Date:</label>
-			<input class="form-control" type="date" value="{{ date_iso }}">
+			<input class="form-control" id="journal-date" type="date" value="{{ date_iso }}">
 		</div>
 		</div>
 	</div>

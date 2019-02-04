@@ -149,12 +149,12 @@
 	</li>
 </ul>
 </div>
-<div class="col-md-4 r">
+<div class="col-md-5 r">
 	<div class="btn-group btn-group-sm">
 		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-contact-create" type="button"><i class="fas fa-plus"></i> Contact</button>
-		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button">Task</button>
-		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button">Phone</button>
-		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button">Email</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" data-type="event" type="button"><i class="fas fa-clock"></i> Task</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" data-type="phone" type="button"><i class="fas fa-phone"></i> Phone</button>
+		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" data-type="email" type="button"><i class="fas fa-envelope"></i> Email</button>
 		<button class="btn btn-outline-secondary" data-toggle="modal" data-target="#modal-journal-create" type="button"><i class="fas fa-comment"></i> Note</button>
 	</div>
 </div>
@@ -347,6 +347,30 @@ $(function() {
 				$t.html(body);
 			});
 
+		}
+	});
+
+	$('#modal-journal-create').on('show.bs.modal', function(e) {
+		if (e.relatedTarget) {
+
+			var t = e.relatedTarget.dataset.type;
+
+			var d = new Date();
+
+			switch (t) {
+			case 'event':
+				$('#journal-type').val('event');
+				d.setDate(d.getDate() + 7);
+				break;
+			case 'email':
+				$('#journal-type').val('email');
+				break;
+			case 'phone':
+				$('#journal-type').val('phone');
+				break;
+			}
+
+			$('#journal-date').val(d.toISOString().substring(0,10));
 		}
 	});
 
