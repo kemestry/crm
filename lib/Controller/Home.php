@@ -15,7 +15,7 @@ class Home extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES,$ARG)
 	{
 		$data = array(
-			'Page' => array('title' => 'Home'),
+			'Page' => array('title' => 'CRM :: Home'),
 		);
 
 		$C = new \OpenTHC\Company($_SESSION['Company']['id']);

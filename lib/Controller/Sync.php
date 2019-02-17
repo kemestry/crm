@@ -68,8 +68,10 @@ class Sync extends \OpenTHC\Controller\Base
 			$arg = array(':g' => $rec['_source']['global_to_mme_id']);
 			$L = SQL::fetch_row($sql, $arg);
 			if (empty($L['id'])) {
-				die("No License: '{$rec['_source']['global_to_mme_id']}'");
+				_exit_text("No License: '{$rec['_source']['global_to_mme_id']}'", 500);
 			}
+
+			\App\License::import($L);
 
 			$sql = 'SELECT id, hash FROM crm_transfer WHERE company_id = :c AND guid = :g';
 			$arg = array(':c' => $C['id'], ':g' => $rec['guid']);

@@ -16,11 +16,11 @@
 				<h2>Create New Client</h2>
 			</div>
 			<div class="card-body">
-				<input class="form-control license-autocomplete" id="license-name" value="">
+				<input class="form-control license-autocomplete" id="license_name" value="">
 				<input id="license_id" name="license_id" type="hidden">
 			</div>
 			<div class="card-footer">
-				<button class="btn btn-primary"><i class="fas fa-plus"></i> Create Client</button>
+				<button class="btn btn-primary" name="a" value="create"><i class="fas fa-plus"></i> Create Client</button>
 			</div>
 		</div>
 	</div>
@@ -37,7 +37,7 @@ $(function() {
 		source: 'https://directory.openthc.com/api/autocomplete/license?rbe=wa',
 		select: function(e, ui) {
 			$('#license_id').val( ui.item.license.id );
-			$('#license-name').val( ui.item.license.name );
+			$('#license_name').val( ui.item.license.name );
 			return(false);
 		},
 	});

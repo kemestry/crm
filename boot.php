@@ -1,7 +1,7 @@
 <?php
 /**
-	Bootstrap menu.openthc.com
-*/
+ * CRM Bootstrap
+ */
 
 use Edoceo\Radix\DB\SQL;
 
@@ -15,6 +15,7 @@ error_reporting(E_ALL & ~ E_NOTICE);
 openlog('openthc-fire', LOG_ODELAY|LOG_PID, LOG_LOCAL0);
 
 define('HASHID_SALT', '01CRZ5WKQWMWXRCN24MTTG9R4T');
+define('OPT_SYNC_KEY', 'sync-crm-time');
 
 // Composer Autoloader
 $cvl = sprintf('%s/vendor/autoload.php', APP_ROOT);
@@ -28,23 +29,6 @@ require_once(APP_ROOT . '/lib/Base32.php');
 
 SQL::init('pgsql:host=45.79.109.159;dbname=openthc', 'openthc', '13bb034868c4a1545d3d63801bd2266b');
 
-define('OPT_SYNC_KEY', 'sync-crm-time');
-
-function _phone_e164($p)
-{
-	$pnu = \libphonenumber\PhoneNumberUtil::getInstance();
-	$r = $pnu->parse($p, 'US');
-	$r = $pnu->format($r, \libphonenumber\PhoneNumberFormat::E164);
-	return $r;
-}
-
-function _phone_nice($p)
-{
-	$pnu = \libphonenumber\PhoneNumberUtil::getInstance();
-	$r = $pnu->parse($p, 'US');
-	$r = $pnu->format($r, \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
-	return $r;
-}
 
 function _leafdata_product_type_nice($t0,$t1)
 {

@@ -1,12 +1,17 @@
 <?php
 /**
- * An OpenTHC CRM Company Model
-*/
+ * An OpenTHC CRM License Model
+ */
 
 namespace App;
 
-class License extends \OpenTHC\Company
+use Edoceo\Radix\DB\SQL;
+
+class License extends \OpenTHC\License
 {
+	const TABLE = 'crm_license';
+	protected $_table =' crm_license';
+
 	function expandPhone()
 	{
 		if (!empty($this->_data['phone'])) {
@@ -24,5 +29,25 @@ class License extends \OpenTHC\Company
 			'e164' => _phone_e164($p),
 			'nice' => _phone_nice($p)
 		);
+	}
+
+	/**
+	 * Add the crm_license Link if necessary
+	 * @param [type] $L [description]
+	 */
+	static function import($L0)
+	{
+		$sql = 'SELECT * FROM crm_license WHERE company_id_owner = :c AND license_id_prime = :l';
+		$arg = array(
+			':c' => $_SESSION['Company']['id'],
+			':l' => $L0['id'],
+		);
+		$res = SQL::fetch_row($sql, $arg);
+		if (empty($res)) {
+			SQL::insert('crm_license', array(
+				'company_id_owner' => $_SESSION['Company']['id'],
+				'license_id_prime' => $L0['id'],
+			));
+		}
 	}
 }

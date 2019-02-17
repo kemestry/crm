@@ -27,7 +27,6 @@
 		"casbin/casbin": "0.1.6",
 		"edoceo/radix": "dev-master",
 		"erusev/parsedown": "1.7.1",
-		"giggsey/libphonenumber-for-php": "8.9.16",
 		"hashids/hashids": "3.0.0",
 		"league/oauth2-client": "2.4.1",
 		"openthc/common": "dev-master",

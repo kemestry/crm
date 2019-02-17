@@ -31,15 +31,6 @@ class View extends \OpenTHC\Controller\Base
 		$data['License'] = $res;
 		$data['Target_License'] = $res;
 
-		$sql = 'SELECT * FROM crm_license WHERE company_id_owner = :c AND license_id_about = :l';
-		$arg = array(
-			':c' => $_SESSION['Company']['id'],
-			':l' => $data['License']['id'],
-		);
-		$res = SQL::fetch_row($sql, $arg);
-		var_dump($res);
-
-
 		switch ($_GET['v']) {
 		case 'contact-list':
 			return $this->_contact_list($RES, $data);
@@ -47,16 +38,7 @@ class View extends \OpenTHC\Controller\Base
 			return $this->_journal_list($RES, $data);
 		}
 
-		$sql = 'SELECT * FROM license WHERE code = ?';
-		$arg = array($ARG['guid']);
-		$res = SQL::fetch_row($sql, $arg);
-
-		//var_dump($res);
-		// exit;
-
-		$data['License'] = $res;
-
-		$L = new \App\License($res);
+		$L = new \App\License($data['License']);
 		$p = $L->expandPhone();
 		$data['License']['phone_e164'] = $p['e164'];
 		$data['License']['phone_nice'] = $p['nice'];
@@ -75,7 +57,6 @@ class View extends \OpenTHC\Controller\Base
 			'name' => '-Not Set-',
 			'link' => '/contact/create?' . http_build_query(array('company_id' => $data['Company']['id'], 'role' => 'Buyer'))
 		);
-
 		$data['Manager'] = array(
 			'name' => '- Not Set -',
 			'link' => '/contact/create?' . http_build_query(array('company_id' => $_SESSION['Company']['id'])),

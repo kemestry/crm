@@ -12,7 +12,7 @@ class Client extends \OpenTHC\Module\Base
 		$a->get('', 'App\Controller\Client\Home');
 
 		$a->get('/create', 'App\Controller\Client\Create');
-		$a->post('/create', function() { _exit_text('Not Implemented Yet', 500); });
+		$a->post('/create', 'App\Controller\Client\Create');
 
 		$a->get('/map', 'App\Controller\Client\Map');
 
