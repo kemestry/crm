@@ -68,7 +68,7 @@ class Menu
 		}
 
 		$menu['main'][] = array(
-			'link' => '/license/recent',
+			'link' => 'https://directory.openthc.com/license/recent',
 			'html' => '<i class="fas fa-bolt" style="color:#e00;"></i>',
 		);
 

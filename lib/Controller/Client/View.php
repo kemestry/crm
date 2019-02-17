@@ -70,7 +70,7 @@ class View extends \OpenTHC\Controller\Base
 		$sql.= ' FROM crm_transfer';
 		$sql.= ' LEFT JOIN crm_transfer_item ON crm_transfer.id = crm_transfer_item.transfer_id';
 		$sql.= ' WHERE crm_transfer.company_id = :c AND target_license_id = :l';
-		//$sql.= ' AND crm_transfer.stat IN (100, 200, 301, 307)';
+		$sql.= ' AND crm_transfer.stat IN (100, 200, 301, 307)';
 		$arg = array(
 			':c' => $_SESSION['Company']['id'],
 			':l' => $data['License']['id']
