@@ -15,8 +15,9 @@ class View extends \OpenTHC\Controller\Base
 			'Page' => array('title' => 'Client :: Detail'),
 			'date_iso' => strftime('%Y-%m-%d'),
 			'Origin_License' => $_SESSION['License'],
+			'cost_per_hour' => 0,
+			'cost_per_mile' => 0,
 		);
-
 
 		$sql = 'SELECT * FROM license WHERE code = ?';
 		$arg = array($ARG['guid']);
@@ -25,8 +26,6 @@ class View extends \OpenTHC\Controller\Base
 			_exit_text('Not Found', 404);
 		}
 
-		//var_dump($res);
-		// exit;
 
 		$data['License'] = $res;
 		$data['Target_License'] = $res;
@@ -111,6 +110,10 @@ class View extends \OpenTHC\Controller\Base
 			$rec['full_price'] = \number_format($rec['full_price'], 2);
 			$data['transfer_list'][] = $rec;
 		}
+
+		$C = new \OpenTHC\Company($_SESSION['Company']);
+		$data['cost_per_hour'] = floatval($C->opt('cost_per_hour'));
+		$data['cost_per_mile'] = floatval($C->opt('cost_per_mile'));
 
 		//return $this->_container->pwig->render($RES, 'page/client/view.php', $data);
 

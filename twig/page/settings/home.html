@@ -6,8 +6,38 @@
 
 {% block body %}
 
-<input name="address_full" value="{{ License.address_full }}">
+<h1>Settings</h1>
 
+<form method="post">
+<div class="form-group">
+	<label>Primary Address</label>
+	<div class="input-group">
+		<input class="form-control" name="address_full" value="{{ License.address_full }}">
+	</div>
+</div>
 
+<div class="row">
+<div class="col-md-6">
+	<div class="form-group">
+		<label>Cost Per Mile</label>
+		<div class="input-group">
+			<input class="form-control r" name="cost_per_mile" value="{{ cost_per_mile }}">
+		</div>
+	</div>
+</div>
+<div class="col-md-6">
+	<div class="form-group">
+		<label>Cost Per Hour</label>
+		<div class="input-group">
+			<input class="form-control r" name="cost_per_hour" value="{{ cost_per_hour }}">
+		</div>
+	</div>
+</div>
+</div>
+
+<div class="form-actions">
+	<button class="btn btn-primary" name="a" value="save"><i class="fas fa-save"></i> Save</button>
+</div>
+</form>
 
 {% endblock %}

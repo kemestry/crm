@@ -1,7 +1,7 @@
 <?php
 /**
  * Module for Client Routes
-*/
+ */
 
 namespace App\Module;
 
@@ -40,7 +40,7 @@ class Client extends \OpenTHC\Module\Base
 		});
 
 		$a->get('/{guid}', 'App\Controller\Client\View');
-
+		$a->post('/{guid}', 'App\Controller\Client\Save');
 
 	}
 }

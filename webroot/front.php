@@ -129,7 +129,7 @@ $app->get('/search', 'App\Controller\Search')
 
 
 // Settings
-$app->get('/settings', 'App\Controller\Settings')
+$app->map(['GET', 'POST'], '/settings', 'App\Controller\Settings')
 ->add('App\Middleware\Menu')
 ->add('App\Middleware\Session');
 
