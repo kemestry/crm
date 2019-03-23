@@ -1,5 +1,5 @@
 
-<form action="/contact/create" method="post">
+<form action="/contact/create" autocomplete="off" id="form-contact-create" method="post">
 
 <div class="modal" id="modal-contact-create" role="dialog" tabindex="-1">
 <div class="modal-dialog modal-lg" role="document">
@@ -15,7 +15,7 @@
 		<div class="col-md-6">
 		<div class="form-group">
 			<label>Contact:</label>
-			<input class="form-control" name="name" placeholder="Name" value="">
+			<input autocomplete="off" class="form-control" id="modal-contact-autocomplete" name="name" placeholder="Name" value="">
 		</div>
 		</div>
 		<div class="col-md-6">
@@ -39,7 +39,7 @@
 		<div class="form-group">
 			<label>Email:</label>
 			<div class="input-group">
-				<input class="form-control" name="email" placeholder="- email -" value="{{  Contact.email }}">
+				<input autocomplete="off" class="form-control" name="email" placeholder="- email -" value="{{  Contact.email }}">
 				<div class="input-group-append">
 					<a class="btn btn-outline-secondary" href="mailto:{{ Contact.email }}">
 						<i class="fas fa-envelope"></i>
@@ -53,7 +53,7 @@
 		<div class="form-group">
 			<label>Phone:</label>
 			<div class="input-group">
-				<input class="form-control" name="phone" placeholder="- phone -" value="{{  Contact.phone_nice }}">
+				<input autocomplete="off" class="form-control" name="phone" placeholder="- phone -" value="{{  Contact.phone_nice }}">
 				<div class="input-group-append">
 					<a class="btn btn-outline-secondary" href="tel:{{ Contact.phone_e164 }}">
 						<i class="fas fa-mobile-alt"></i>

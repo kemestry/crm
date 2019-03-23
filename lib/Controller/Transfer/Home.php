@@ -28,20 +28,18 @@ class Home extends \OpenTHC\Controller\Base
 
 		$sql = 'SELECT crm_transfer.*, license.code AS target_license_code, license.name AS target_license_name FROM crm_transfer';
 		$sql.= ' JOIN license ON crm_transfer.target_license_id = license.id';
-		$sql.= ' WHERE crm_transfer.company_id = :c AND completed_at IS NOT NULL';
+		$sql.= ' WHERE crm_transfer.company_id = :c';
+		$sql.= ' AND (crm_transfer.stat >= 100 AND crm_transfer.stat < 400) AND crm_transfer.completed_at IS NOT NULL';
 		$sql.= ' ORDER BY completed_at DESC';
 		//$sql.= ' LIMIT 100';
 		$arg = array(':c' => $_SESSION['Company']['id']);
 		$res = SQL::fetch_all($sql, $arg);
 		foreach ($res as $rec) {
-			$rec['guid_nice'] = preg_match('/\.IT(\w{3,10})$/', $rec['guid'], $m) ? $m[1] : $rec['guid'];
-			$rec['date_nice'] = _date('m/d', $rec['completed_at']);
-			$rec['meta'] = json_decode($rec['meta'], true);
-			$rec['flag_sync'] = ($rec['flag'] & \App\Transfer::FLAG_SYNC);
-			$rec['full_price'] = \number_format($rec['full_price'], 2);
+
+			$rec = \App\Transfer::inflate($rec);
 			$data['transfer_list'][] = $rec;
 
-			if ($rec['flag_sync']) {
+			if (empty($rec['flag_sync'])) {
 				$data['sync'] = true;
 			}
 

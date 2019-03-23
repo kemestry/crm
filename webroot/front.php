@@ -1,7 +1,7 @@
 <?php
 /**
  * Front Controller for crm.openthc.com
-*/
+ */
 
 use Edoceo\Radix;
 use Edoceo\Radix\Session;
@@ -12,26 +12,39 @@ require_once(APP_ROOT . '/Pwig.php');
 
 $cfg = array('debug' => true);
 $app = new \OpenTHC\App($cfg);
+$con = $app->getContainer();
 
+$con['DB'] = function($c0) {
+	$cfg = \OpenTHC\Config::get('database_main');
+	var_dump($cfg);
+	exit;
+};
+
+// Extend Twig with PHP Include (eval'd!!!)
+// $con['view']->getEnvironment()->addFunction(new \Twig\TwigFunction('include_php', function($f, $d) {
+// 	var_dump($f);
+// 	var_dump($d);
+// 	exit(0);
+// }, ['is_safe' => ['html']]));
 
 // Pwig
-$con = $app->getContainer();
-$con['pwig'] = function($c0) {
-	$p = new Edoceo\Pwig();
-	$p->addPath(sprintf('%s/pwig', APP_ROOT));
-	return $p;
-};
+// $con['pwig'] = function($c0) {
+// 	$p = Edoceo\Pwig::getInstance();
+// 	$p->addPath(sprintf('%s/pwig', APP_ROOT));
+// 	return $p;
+// };
 
 
 // Home
 $app->get('/home', 'App\Controller\Home')
 ->add('App\Middleware\Menu')
+->add('App\Middleware\Auth')
 ->add('App\Middleware\Session');
 
 
-$app->get('/pwig', function($REQ, $RES) {
-	return $this->pwig->render($RES, 'client/view.php', $data);
-});
+// $app->get('/pwig', function($REQ, $RES) {
+// 	return $this->pwig->render($RES, 'client/view.php', $data);
+// });
 
 // Sync
 $app->get('/sync', 'App\Controller\Sync')
@@ -73,15 +86,19 @@ $app->get('/prospect', function($REQ, $RES, $ARG) {
 
 	return $this->view->render($RES, 'page/prospect.html', $data);
 
-})->add('App\Middleware\Menu');
-
+})
+->add('App\Middleware\Menu')
+->add('App\Middleware\Auth')
+->add('App\Middleware\Session');
 
 // Create new Code with UI
 $app->group('/client', 'App\Module\Client')
 	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
 	->add('App\Middleware\Session');
 
 
+$app->get('/contact/ajax', 'App\Controller\Contact\Ajax')->add('App\Middleware\Session');
 $app->get('/contact/create', 'App\Controller\Contact\Create')->add('App\Middleware\Menu')->add('App\Middleware\Session');
 $app->post('/contact/create', 'App\Controller\Contact\Create')->add('App\Middleware\Menu')->add('App\Middleware\Session');
 // $app->post('/contact/create', function($REQ, $RES, $ARG) {
@@ -94,6 +111,7 @@ $app->post('/contact/create', 'App\Controller\Contact\Create')->add('App\Middlew
 // Transfer / Manifest / Order
 $app->group('/transfer', 'App\Module\Transfer')
 	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
 	->add('App\Middleware\Session');
 
 

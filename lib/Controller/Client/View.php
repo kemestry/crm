@@ -7,7 +7,7 @@ namespace App\Controller\Client;
 
 use Edoceo\Radix\DB\SQL;
 
-class View extends \OpenTHC\Controller\Base
+class View extends \App\Controller\Base
 {
 	function __invoke($REQ, $RES,$ARG)
 	{
@@ -17,6 +17,7 @@ class View extends \OpenTHC\Controller\Base
 			'Origin_License' => $_SESSION['License'],
 			'cost_per_hour' => 0,
 			'cost_per_mile' => 0,
+			'contact_list'  => $this->getContactList(),
 		);
 
 		$sql = 'SELECT * FROM license WHERE code = ?';
@@ -69,7 +70,7 @@ class View extends \OpenTHC\Controller\Base
 		$sql.= ' FROM crm_transfer';
 		$sql.= ' LEFT JOIN crm_transfer_item ON crm_transfer.id = crm_transfer_item.transfer_id';
 		$sql.= ' WHERE crm_transfer.company_id = :c AND target_license_id = :l';
-		$sql.= ' AND crm_transfer.stat IN (100, 200, 301, 307)';
+		$sql.= ' AND crm_transfer.stat IN (301, 307)'; // 100, 200,
 		$arg = array(
 			':c' => $_SESSION['Company']['id'],
 			':l' => $data['License']['id']
@@ -87,14 +88,14 @@ class View extends \OpenTHC\Controller\Base
 
 
 		// Show all Client Transfers
-		$sql = 'SELECT crm_transfer.guid, crm_transfer.created_at, crm_transfer.completed_at, crm_transfer.stat, crm_transfer.full_price, license.code AS target_license_code, license.name AS target_license_name';
+		$sql = 'SELECT crm_transfer.guid, crm_transfer.flag, crm_transfer.created_at, crm_transfer.completed_at, crm_transfer.stat, crm_transfer.full_price, license.code AS target_license_code, license.name AS target_license_name';
 		$sql.= ', count(crm_transfer_item.id) AS lot_count';
 		$sql.= ' FROM crm_transfer';
 		$sql.= ' JOIN license ON crm_transfer.target_license_id = license.id';
 		$sql.= ' LEFT JOIN crm_transfer_item ON crm_transfer.id = crm_transfer_item.transfer_id';
 		$sql.= ' WHERE crm_transfer.company_id = :c AND target_license_id = :l';
 		//$sql.= ' AND crm_transfer.stat IN (100, 200, 301, 307)';
-		$sql.= ' GROUP BY crm_transfer.guid, crm_transfer.created_at, crm_transfer.completed_at, crm_transfer.stat, crm_transfer.full_price, license.code, license.name';
+		$sql.= ' GROUP BY crm_transfer.guid, crm_transfer.flag, crm_transfer.created_at, crm_transfer.completed_at, crm_transfer.stat, crm_transfer.full_price, license.code, license.name';
 		$sql.= ' ORDER BY created_at DESC';
 		$arg = array(
 			':c' => $_SESSION['Company']['id'],
@@ -103,11 +104,7 @@ class View extends \OpenTHC\Controller\Base
 
 		$res = SQL::fetch_all($sql, $arg);
 		foreach ($res as $rec) {
-			$rec['guid_nice'] = preg_match('/\.IT(\w{3,10})$/', $rec['guid'], $m) ? $m[1] : $rec['guid'];
-			$rec['completed_at'] = _date('m/d', $rec['completed_at']);
-			$rec['meta'] = json_decode($rec['meta'], true);
-			$rec['flag_sync'] = ($rec['flag'] & \App\Transfer::FLAG_SYNC);
-			$rec['full_price'] = \number_format($rec['full_price'], 2);
+			$rec = \App\Transfer::inflate($rec);
 			$data['transfer_list'][] = $rec;
 		}
 
@@ -115,8 +112,8 @@ class View extends \OpenTHC\Controller\Base
 		$data['cost_per_hour'] = floatval($C->opt('cost_per_hour'));
 		$data['cost_per_mile'] = floatval($C->opt('cost_per_mile'));
 
-		//return $this->_container->pwig->render($RES, 'page/client/view.php', $data);
 
+		//return $this->_container->pwig->render($RES, 'page/client/view.php', $data);
 		return $this->_container->view->render($RES, 'page/client/view.html', $data);
 
 	}

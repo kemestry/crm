@@ -120,11 +120,11 @@
 		<h4>Contact Details</h4>
 		<div class="form-group">
 			<label>Owner/Primary</label>
-			<input class="form-control" value="{{ Contact0.name }}">
+			<input class="form-control client-contact-autocomplete" value="{{ Contact0.name }}">
 		</div>
 		<div class="form-group">
 			<label>Buyer/Manager</label>
-			<input class="form-control" value="{{ Contact1.name }}">
+			<input class="form-control client-contact-autocomplete" value="{{ Contact1.name }}">
 		</div>
 		<!--
 		<p>Primary: <a href="{{ Contact0.link }}"></a></p>
@@ -136,7 +136,7 @@
 		<div class="form-group">
 			<label>Manager</label>
 			<div class="input-group">
-				<input class="form-control" value="{{ Manager.name }}">
+				<input class="form-control origin-contact-autocomplete" value="{{ Manager.name }}">
 				<div class="input-group-append">
 					<!-- @todo if empty make a ++ button -->
 					<a class="btn btn-outline-secondary" href="{{ Manager.link }}">XX</a>
@@ -177,37 +177,7 @@
 <div class="tab-content">
 
 <div class="tab-pane active" id="history-t">
-<div class="table-responsive">
-<table class="table table-sm" id="transfer-table">
-	<thead class="thead-dark">
-		<tr>
-			<th>Order</th>
-			<th>Date</th>
-			<th>Status</th>
-			<th class="r">Lots</th>
-			<th class="r">Revenue</th>
-		</tr>
-	</thead>
-	<tbody>
-	{% for t in transfer_list %}
-		<tr class="transfer">
-			<td><a href="/transfer/{{ t.guid }}">{{ t.guid_nice }}</a></td>
-			<td>{{ t.completed_at }}</td>
-			<td>{{ t.stat }}</td>
-			<td class="r">{{ t.lot_count }}</td>
-			<td class="r">{{ t.full_price }}</td>
-			<!--
-			<td class="r">
-				<button class="btn btn-sm btn-outline-secondary btn-sync"
-					data-guid="{{ t.guid }}"
-					data-sync="{{ t.flag_sync }}"><i class="fas fa-sync"></i></button>
-			</td>
-			-->
-		</tr>
-	{% endfor %}
-	</tbody>
-</table>
-</div>
+{% include "block/transfer-list.html" %}
 </div>
 
 <div class="tab-pane" id="journal-list" style="min-height: 20vh;">
@@ -247,6 +217,25 @@ var Target_License_pt = new google.maps.LatLng({{ Target_License.geo_lat }}, {{ 
 $(function() {
 
 	$('#contact-roles').select2();
+
+	$('.origin-contact-autocomplete').autocomplete({
+		source: '/contact/ajax?a=origin',
+		// select: function(e, ui) {
+		// 	$('#license_id').val( ui.item.license.id );
+		// 	$('#license_name').val( ui.item.license.name );
+		// 	return(false);
+		// },
+	});
+
+	$('.client-contact-autocomplete').autocomplete({
+		source: '/contact/ajax?a=client',
+		// select: function(e, ui) {
+		// 	$('#license_id').val( ui.item.license.id );
+		// 	$('#license_name').val( ui.item.license.name );
+		// 	return(false);
+		// },
+	});
+
 
 	google.charts.setOnLoadCallback(function() {
 		$.get('/chart/revenue-license-line?l={{ License.id }}', function(body) {
@@ -335,7 +324,6 @@ $(function() {
 				var d_m = leg.distance.value; // Distance in Meters
 				var t_s = leg.duration.value; // Time in Seconds?
 
-				debugger;
 				var cost_m = ((d_m / 1000) / 1.609344) * {{ cost_per_mile }};
 				var cost_t = (t_s / 3600) * {{ cost_per_hour }};
 				$('#route-cost-mile').html(cost_m.toFixed(2));
@@ -350,7 +338,9 @@ $(function() {
 				};
 
 				$.post('', arg, function(x) {
-					debugger;
+					//alert('updated');
+					//debugger;
+					$('#route-update').remove();
 				})
 
 				break;

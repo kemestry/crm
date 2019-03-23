@@ -11,11 +11,13 @@
 	width: 100%;
 }
 .table-calendar td {
+	padding: 0;
 	position: relative;
 	height: 64px;
 	vertical-align: bottom;
-	width: 14.28571428;
+	width: 14.28571428%;
 }
+
 .table-calendar td .dom-wrap {
 	font-size: 80%;
 	text-align: right;
@@ -23,6 +25,16 @@
 	right: .3rem;
 	top: 0;
 }
+
+.table-calendar td .btn-wrap {
+	font-size: 80%;
+	text-align: right;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+
 .table-calendar td .cal-item {
 	background: #d0d0d0;
 	margin: 0 0 0.3rem 0;
@@ -70,14 +82,12 @@
 
 <div class="tab-content">
 <div class="tab-pane active" id="journal-agenda-view" style="min-height:30vh;">
-	<h3>Agenda</h3>
 	<div>
 	</div>
 </div>
 
 
 <div class="tab-pane" id="journal-calendar-view">
-	<h3>Calendar</h3>
 	<div class="table-responsive">
 		<table class="table table-sm table-bordered table-calendar">
 		<thead class="thead-dark">
@@ -92,10 +102,13 @@
 			<tr>
 			{% for d in w.day_list %}
 				<td class="{{ pick ? " active" }}">
-					<div class="dom-wrap">{{ d.name }}</div>
+					<div class="day-wrap">
 					{% for e in d.evt_list %}
 						<div class="cal-item">{{ e }}</div>
 					{% endfor %}
+					</div>
+					<div class="dom-wrap">{{ d.name }}</div>
+					<div class="btn-wrap"><a class="btn btn-sm" href="#"><i class="fas fa-plus"></i></a></div>
 				</td>
 			{% endfor %}
 			</tr>
@@ -106,14 +119,29 @@
 </div>
 </div>
 
+{% include "modal/contact-create.html" %}
+{% include "modal/journal-create.html" %}
+
 {% endblock %}
 
 {% block foot_script %}
 {{ parent() }}
 <script>
 google.charts.setOnLoadCallback(function() {
+
+	$(function() {
+		$('#modal-contact-autocomplete').autocomplete({
+			source: '/contact/ajax?a=global',
+			// select: function(e, ui) {
+			// 	$('#company_id').val( ui.item.license.id );
+			// 	$('#company_name').val( ui.item.license.name );
+			// 	return(false);
+			// },
+		});
+	});
+
 	$.get('/chart/revenue-line', function(body) {
-		debugger;
+
 		var data = google.visualization.arrayToDataTable(body);
 
 		var opts = {

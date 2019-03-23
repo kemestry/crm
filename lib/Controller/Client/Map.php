@@ -20,8 +20,10 @@ SELECT DISTINCT license.name AS license_name
 , license.guid AS license_guid
 , license.type AS license_type
 , license.address_full
+, crm_license.meta AS license_meta
 , company.name AS company_name
 FROM license
+JOIN crm_license ON license.id = crm_license.license_id_prime
 JOIN crm_transfer ON crm_transfer.target_license_id = license.id
 JOIN company ON license.company_id = company.id
 WHERE crm_transfer.company_id = :c
@@ -34,12 +36,22 @@ EOS;
 			$ret = array();
 			$res = SQL::fetch_all($sql, $arg);
 			foreach ($res as $rec) {
+
+				// $rec['license_meta'] = json_decode($rec['license_meta'], true);
+				// $rec['license_meta'] = json_decode($rec['license_meta'], true);
+				//
+				// if ('R421577' == $rec['license_code']) {
+				// 	var_dump($rec);
+				// 	exit;
+				// }
+
 				$ret[] = array(
 					'name' => $rec['license_name'],
 					'type' => $rec['license_type'],
 					'license_code' => $rec['license_code'],
 					'license_guid' => $rec['license_guid'],
 					'license_type' => $rec['license_type'],
+					'distance' => $rec['license_meta'], // ['dist_m'],
 					'geo_lat' => floatval($rec['geo_lat']),
 					'geo_lon' => floatval($rec['geo_lon']),
 					'marker' => array(
@@ -54,10 +66,6 @@ EOS;
 
 		$data = array(
 			'Page' => array('title' => 'Client :: Map'),
-			'center' => array(
-				'latitude' => 0,
-				'longitude' => 0,
-			),
 			'client_list' => array(),
 			'license_type_list' => array(),
 		);

@@ -28,7 +28,7 @@
 -->
 
 <div class="table-responsive">
-<table class="table table-sm">
+<table class="table table-sm" id="transfer-table">
 <thead class="thead-dark">
 	<tr>
 		<th>Order</th>
@@ -36,7 +36,8 @@
 		<th>Client</th>
 		<th>Status</th>
 		<th class="r">Revenue</th>
-		<th></th>
+		<th data-orderable="false"></th>
+		<th data-orderable="false"></th>
 	</tr>
 </thead>
 <tbody>
@@ -46,8 +47,8 @@
 		<td>{{ t.date_nice }}</td>
 		<td><a href="/client/{{ t.target_license_code }}">{{ t.target_license_name }}</a></td>
 		<td>{{ t.stat }}</td>
-		<!-- <td class="r">{{ t.c }}</td> -->
 		<td class="r">{{ t.full_price }}</td>
+		<td class="r">{{ t.flag_html|raw }}</td>
 		<td class="r">
 			<button class="btn btn-sm btn-outline-secondary btn-sync"
 				data-guid="{{ t.guid }}"
@@ -142,6 +143,15 @@ $(function() {
 			chart.draw(data, opts);
 		});
 
+	});
+
+	$('#transfer-table').DataTable({
+		info: false,
+		order: [],
+		paging: false,
+		processing: true,
+		//ordering: false,
+		searching: false,
 	});
 
 	setTimeout(doOneSync, sync_wait);

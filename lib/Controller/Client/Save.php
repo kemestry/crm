@@ -23,6 +23,7 @@ class Save extends \OpenTHC\Controller\Base
 
 		switch ($_POST['a']) {
 		case 'update-route':
+
 			$sql = 'SELECT * FROM crm_license WHERE company_id_owner = :c0 AND license_id_prime = :l0';
 			$arg = array(
 				':c0' => $_SESSION['Company']['id'],
@@ -31,13 +32,17 @@ class Save extends \OpenTHC\Controller\Base
 			$rec = SQL::fetch_row($sql, $arg);
 			if (empty($rec)) {
 				// Create
+				_exit_json(array(
+					'status' => 'failure',
+				), 500);
+
 			} else {
-				$rec['meta'] = json_decode($rec['meta']);
+				$rec['meta'] = array();// json_decode($rec['meta']);
 				$rec['meta']['dist_s'] = $_POST['s'];
 				$rec['meta']['dist_m'] = $_POST['m'];
 				$rec['meta']['cost_per_hour'] = $_POST['ct'];
 				$rec['meta']['cost_per_mile'] = $_POST['cm'];
-				$rec['meta'] = json_encode($rec['meta']);
+
 				SQL::query('UPDATE crm_license SET meta = :m WHERE id = :id', array(
 					':id' => $rec['id'],
 					':m' => json_encode($rec['meta'])
@@ -46,6 +51,7 @@ class Save extends \OpenTHC\Controller\Base
 
 			_exit_json(array(
 				'status' => 'success',
+				'id' => $rec['id'],
 			));
 
 			break;

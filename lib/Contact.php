@@ -17,4 +17,13 @@ class Contact extends \OpenTHC\Contact
 	{
 		// Try crm_table else, and then load from the \OpenTHC\Contact
 	}
+
+	// function findBy($q, $f)
+	// {
+	// 	if (is_array($q)) {
+	// 		if (!empty($q['company_id'])) {
+	//
+	// 		}
+	// 	}
+	// }
 }

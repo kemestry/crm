@@ -33,8 +33,9 @@ class Home extends \OpenTHC\Controller\Base
 		$sql.= ' FROM crm_transfer';
 		$sql.= ' JOIN license ON crm_transfer.target_license_id = license.id';
 		//$sql.= ' LEFT JOIN crm_license ON crm_transfer.target_license_id = crm_license.license_id_about';
-		$sql.= ' WHERE crm_transfer.company_id = :c '; // AND crm_license.company_id_owner = :c';
+		$sql.= ' WHERE crm_transfer.company_id = :c ';
 		//$sql.= ' AND crm_transfer.full_price > 0';
+
 		switch ($_GET['view']) {
 		case 'a':
 			$sql.= " AND crm_transfer.completed_at >= now() - '3 months'::interval";
@@ -53,6 +54,7 @@ class Home extends \OpenTHC\Controller\Base
 			$sql.= " AND crm_transfer.completed_at <= now() - '3 months'::interval";
 			break;
 		case 'p': // Prospects
+
 			// Filter for Only
 			$tab = sprintf('license_prospect_%08x', crc32(\json_encode($_SESSION)));
 			$sql = "CREATE TEMPORARY TABLE $tab (license_id bigint)";
@@ -80,6 +82,23 @@ class Home extends \OpenTHC\Controller\Base
 
 			break;
 
+		}
+
+
+		// Target License Type Filter
+		switch ($_GET['type']) {
+		case 'a':
+			// Nothing
+			break;
+		case 'g':
+			$sql.= " AND (license.type = 'G' OR license.code LIKE 'G%')";
+			break;
+		case 'p':
+			$sql.= " AND (license.type = 'M' OR license.code LIKE 'J%' OR license.code LIKE 'M%')";
+			break;
+		case 'r':
+			$sql.= " AND (license.type = 'R' OR license.code LIKE 'R%')";
+			break;
 		}
 
 		$sql.= ' GROUP BY license.id, license.name, license.code';

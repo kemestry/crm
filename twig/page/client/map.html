@@ -132,7 +132,6 @@ function marker_create(mark)
 
 	mk.addListener('click', function(e) {
 		marker_window(this);
-		PointA = PointG;
 		PointB = this.position;
 		//draw_line(PointA, PointB);
 		draw_route(PointA, PointB)
@@ -200,8 +199,7 @@ $(function() {
 		}
 	};
 
-	var cpt = new google.maps.LatLng({{ center.latitude }}, {{ center.longitude }});
-
+	var cpt = PointA;
 	var x = localStorage.getItem('cpt');
 	if (x) {
 		cpt = new google.maps.LatLng(JSON.parse(x));
@@ -217,6 +215,7 @@ $(function() {
 	window.dirDisplay = new google.maps.DirectionsRenderer({
 		draggable: false,
 		map: OPM,
+		preserveViewport: true,
 		suppressInfoWindows: true,
 		suppressMarkers: true,
 	});
