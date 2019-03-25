@@ -16,6 +16,9 @@ class Sync extends \OpenTHC\Controller\Base
 	{
 		\session_write_close();
 
+		// Detect Transfer License vs Source License (mine)
+		// So, we pull the right license when connected (may have to re-auth to switch license?)
+
 		$RC = new \Redis();
 		$RC->connect('127.0.0.1');
 
@@ -30,6 +33,7 @@ class Sync extends \OpenTHC\Controller\Base
 		$rce = new \OpenTHC\RCE($_SESSION['pipe-token']);
 		$res = $rce->get('/transfer/outgoing/' . $data['transfer']['guid']);
 		if ('success' != $res['status']) {
+			//_exit_text($res);
 			_exit_text('Failed to Load Transfer, Please Try Again', 500);
 		}
 		$T = $res['result'];

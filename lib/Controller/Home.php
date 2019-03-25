@@ -10,7 +10,7 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 
-class Home extends \OpenTHC\Controller\Base
+class Home extends \App\Controller\Base
 {
 	function __invoke($REQ, $RES,$ARG)
 	{
@@ -74,6 +74,8 @@ class Home extends \OpenTHC\Controller\Base
 			);
 		}
 
+		// Get all Contacts for Our Company
+		$data['contact_list_owner'] = $this->getContactList($_SESSION['gid']);
 
 		return $this->_container->view->render($RES, 'page/home.html', $data);
 

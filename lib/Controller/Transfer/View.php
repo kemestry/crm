@@ -15,6 +15,17 @@ class View extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES,$ARG)
 	{
 		switch ($_POST['a']) {
+		case 'mute':
+
+			$sql = 'UPDATE crm_transfer SET stat = :s, completed_at = null WHERE company_id = :c AND guid = :g';
+			$arg = array(
+				':c' => $_SESSION['Company']['id'],
+				':g' => $ARG['guid'],
+				':s' => 500,
+			);
+			SQL::query($sql, $arg);
+			return $RES->withRedirect('/transfer');
+
 		case 'sync':
 			$C = new Sync($this->_container);
 			return $C->__invoke($REQ, $RES, $ARG);

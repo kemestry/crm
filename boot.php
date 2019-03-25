@@ -24,11 +24,7 @@ if (!is_file($cvl)) {
 }
 require_once($cvl);
 
-require_once('/opt/common/lib/Controller/Auth/Connect.php');
-require_once(APP_ROOT . '/lib/Base32.php');
-
 SQL::init('pgsql:host=45.79.109.159;dbname=openthc', 'openthc', '13bb034868c4a1545d3d63801bd2266b');
-
 
 function _leafdata_product_type_nice($t0,$t1)
 {

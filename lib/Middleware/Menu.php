@@ -67,10 +67,10 @@ class Menu
 			);
 		}
 
-		$menu['main'][] = array(
-			'link' => 'https://directory.openthc.com/license/recent',
-			'html' => '<i class="fas fa-bolt" style="color:#e00;"></i>',
-		);
+		// $menu['main'][] = array(
+		// 	'link' => 'https://directory.openthc.com/license/recent',
+		// 	'html' => '<i class="fas fa-bolt" style="color:#e00;"></i>',
+		// );
 
 		$this->_container->view['menu'] = $menu;
 

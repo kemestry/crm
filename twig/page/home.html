@@ -136,11 +136,18 @@ $(function() {
 
 	$('#modal-contact-autocomplete').autocomplete({
 		source: '/contact/ajax?a=global',
-		// select: function(e, ui) {
-		// 	$('#company_id').val( ui.item.license.id );
-		// 	$('#company_name').val( ui.item.license.name );
-		// 	return(false);
-		// },
+		select: function(e, ui) {
+			debugger;
+
+			$('#contact_id').val( ui.item.id );
+			$('#contact_email').val(ui.item.email);
+			$('#contact_phone').val(ui.item.phone);
+
+			$('#company_id').val( ui.item.company.id );
+			$('#company_name').val( ui.item.company.name );
+
+			return(false);
+		},
 	});
 
 	var x = localStorage.getItem('home-tab');
@@ -189,16 +196,16 @@ google.charts.setOnLoadCallback(function() {
 		chart.draw(data, opts);
 	});
 
-	$.get('/chart/revenue-product-type-90d', function(body) {
-		var data = google.visualization.arrayToDataTable(body);
-		//var opts = chart_options_pie;
-		//opts.is3D = true;
-		//opts.legend.position = 'none';
-		var opts = {};
-
-		var chart = new google.visualization.ColumnChart(document.getElementById('chart-revenue-product-home'));
-		chart.draw(data, opts);
-	});
+	// $.get('/chart/revenue-product-type-90d', function(body) {
+	// 	var data = google.visualization.arrayToDataTable(body);
+	// 	//var opts = chart_options_pie;
+	// 	//opts.is3D = true;
+	// 	//opts.legend.position = 'none';
+	// 	var opts = {};
+	//
+	// 	var chart = new google.visualization.ColumnChart(document.getElementById('chart-revenue-product-home'));
+	// 	chart.draw(data, opts);
+	// });
 
 });
 </script>

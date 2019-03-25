@@ -1,27 +1,32 @@
 <?php
 /**
- * Revenue for Current 12 Months and the Previous 12 Months
+ * Pie Chart, Product Type, 90 Days
  */
 
 use Edoceo\Radix\DB\SQL;
 
 $d0 = new DateTime();
 $d0->setTimezone(new DateTimeZone('America/Los_Angeles'));
-$d0->sub(new DateInterval('P1D'));
+//$d0->sub(new DateInterval('P1D'));
 
 $m00 = clone $d0;
 
 $m01 = clone $m00;
 $m01->sub(new DateInterval('P3M'));
+//$m01->sub(new DateInterval('P30D'));
+
+$c_value = "crm_transfer_item.package_qty";
+$c_value = "crm_transfer_item.full_price";
+
 
 // $m24 = clone $m00;
 // $m24->sub(new DateInterval('P24M'));
 $sql = <<<EOS
 SELECT crm_transfer_item.meta->'Product'->>'intermediate_type' AS t
-, sum( NULLIF(crm_transfer_item.meta->'Item'->>'received_qty', '0')::float) AS c
+, sum( NULLIF($c_value, '0')::float) AS c
 FROM crm_transfer
 JOIN crm_transfer_item ON crm_transfer.id = crm_transfer_item.transfer_id
-WHERE crm_transfer.company_id = :c AND completed_at >= :d0 AND completed_at <= :d1
+WHERE crm_transfer.company_id = :c AND crm_transfer.stat IN (100, 200, 204, 302, 307) AND completed_at >= :d0 AND completed_at <= :d1
 GROUP BY crm_transfer_item.meta->'Product'->>'intermediate_type'
 ORDER BY c, t
 LIMIT 10

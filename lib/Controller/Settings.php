@@ -7,7 +7,7 @@ namespace App\Controller;
 
 use Edoceo\Radix\DB\SQL;
 
-class Settings extends \OpenTHC\Controller\Base
+class Settings extends \App\Controller\Base
 {
 	function __invoke($REQ, $RES,$ARG)
 	{
@@ -33,6 +33,8 @@ class Settings extends \OpenTHC\Controller\Base
 		if (empty($data['cost_per_mile'])) {
 			$data['cost_per_mile'] = 0.75;
 		}
+
+		$data['contact_list'] = $this->getContactList($_SESSION['gid']);
 
 		return $this->_container->view->render($RES, 'page/settings/home.html', $data);
 	}

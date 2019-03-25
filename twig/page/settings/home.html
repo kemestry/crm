@@ -1,9 +1,7 @@
 {#
 	Product / Create / Done
 #}
-
 {% extends "layout/html.html" %}
-
 {% block body %}
 
 <h1>Settings</h1>
@@ -39,5 +37,27 @@
 	<button class="btn btn-primary" name="a" value="save"><i class="fas fa-save"></i> Save</button>
 </div>
 </form>
+
+
+<h2>Company Contacts</h2>
+<table class="table table-sm" id="table-contact-list">
+<thead class="thead-dark">
+<tr>
+	<th>Name</th>
+	<th>Email</th>
+	<th>Phone</th>
+</tr>
+</thead>
+<tbody>
+{% for c in contact_list %}
+	<tr>
+		<td>{{ c.name }}</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+
 
 {% endblock %}

@@ -27,38 +27,7 @@
 <p>Average Transfer Amount:  {{ transfer_stat.r_avg }}</p>
 -->
 
-<div class="table-responsive">
-<table class="table table-sm" id="transfer-table">
-<thead class="thead-dark">
-	<tr>
-		<th>Order</th>
-		<th>Date</th>
-		<th>Client</th>
-		<th>Status</th>
-		<th class="r">Revenue</th>
-		<th data-orderable="false"></th>
-		<th data-orderable="false"></th>
-	</tr>
-</thead>
-<tbody>
-{% for t in transfer_list %}
-	<tr class="transfer">
-		<td><a href="/transfer/{{ t.guid }}">{{ t.guid_nice }}</a></td>
-		<td>{{ t.date_nice }}</td>
-		<td><a href="/client/{{ t.target_license_code }}">{{ t.target_license_name }}</a></td>
-		<td>{{ t.stat }}</td>
-		<td class="r">{{ t.full_price }}</td>
-		<td class="r">{{ t.flag_html|raw }}</td>
-		<td class="r">
-			<button class="btn btn-sm btn-outline-secondary btn-sync"
-				data-guid="{{ t.guid }}"
-				data-sync="{{ t.flag_sync }}"><i class="fas fa-sync"></i></button>
-		</td>
-	</tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
+{% include "block/transfer-list.html" %}
 
 {% endblock %}
 
@@ -152,6 +121,24 @@ $(function() {
 		processing: true,
 		//ordering: false,
 		searching: false,
+	});
+
+	$('.btn-sync').on('click', function() {
+
+		$btn = $(this);
+
+		var arg = {
+			a: 'sync',
+		};
+
+		$btn.addClass('btn-outline-danger');
+		$btn.find('i').addClass('fa-spin');
+		$btn.data('sync', '1');
+		$.post('/transfer/' + $btn.data('guid') + '/sync', arg, function() {
+			$btn.find('i').removeClass('fa-spin');
+			$btn.removeClass('btn-outline-danger');
+			setTimeout(doOneSync, sync_wait);
+		});
 	});
 
 	setTimeout(doOneSync, sync_wait);

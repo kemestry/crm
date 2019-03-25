@@ -26,24 +26,32 @@ FROM license
 JOIN crm_license ON license.id = crm_license.license_id_prime
 JOIN crm_transfer ON crm_transfer.target_license_id = license.id
 JOIN company ON license.company_id = company.id
-WHERE crm_transfer.company_id = :c
+WHERE crm_license.company_id_owner = :c0 AND crm_transfer.company_id = :c0
+
 EOS;
 
 			$arg = array(
-				':c' => $_SESSION['gid'],
+				':c0' => $_SESSION['gid'],
 			);
 
 			$ret = array();
 			$res = SQL::fetch_all($sql, $arg);
 			foreach ($res as $rec) {
 
-				// $rec['license_meta'] = json_decode($rec['license_meta'], true);
+				$rec['license_meta'] = json_decode($rec['license_meta'], true);
 				// $rec['license_meta'] = json_decode($rec['license_meta'], true);
 				//
 				// if ('R421577' == $rec['license_code']) {
 				// 	var_dump($rec);
 				// 	exit;
 				// }
+				$d = $rec['license_meta']['dist_m']; // Meters
+				$d = ceil($d * 0.0006213712); // In Miles
+
+				$tS = $rec['license_meta']['dist_s'];
+				$tH = floor($tS / 60 / 60);
+				$tS = $tS - ($tH * 60 * 60);
+				$tM = floor($tS / 60);
 
 				$ret[] = array(
 					'name' => $rec['license_name'],
@@ -51,7 +59,7 @@ EOS;
 					'license_code' => $rec['license_code'],
 					'license_guid' => $rec['license_guid'],
 					'license_type' => $rec['license_type'],
-					'distance' => $rec['license_meta'], // ['dist_m'],
+					'travel_info' => sprintf('%d Miles, %dh %02dm', $d, $tH, $tM),
 					'geo_lat' => floatval($rec['geo_lat']),
 					'geo_lon' => floatval($rec['geo_lon']),
 					'marker' => array(

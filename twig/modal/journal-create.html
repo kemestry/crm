@@ -36,7 +36,8 @@
 	<div class="col">
 		<div class="form-group">
 			<label>Contact:</label>
-			<select class="form-control" name="contact_id_about"></select>
+			<select class="form-control" name="contact_id_about">
+			</select>
 		</div>
 	</div>
 	</div>
@@ -46,6 +47,19 @@
 		<div class="form-group">
 			<label>Notes: <small>markdown</small></label>
 			<textarea class="form-control" id="journal-note" name="note"></textarea>
+		</div>
+	</div>
+	</div>
+
+	<div class="row">
+	<div class="col">
+		<div class="form-group">
+			<label>Owner:</label>
+			<select class="form-control" name="contact_id_owner">
+			{% for c in contact_list_owner %}
+				<option>{{ c.name }}</option>
+			{% endfor %}
+			</select>
 		</div>
 	</div>
 	</div>

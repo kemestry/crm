@@ -11,15 +11,6 @@ class View extends \App\Controller\Base
 {
 	function __invoke($REQ, $RES,$ARG)
 	{
-		$data = array(
-			'Page' => array('title' => 'Client :: Detail'),
-			'date_iso' => strftime('%Y-%m-%d'),
-			'Origin_License' => $_SESSION['License'],
-			'cost_per_hour' => 0,
-			'cost_per_mile' => 0,
-			'contact_list'  => $this->getContactList(),
-		);
-
 		$sql = 'SELECT * FROM license WHERE code = ?';
 		$arg = array($ARG['guid']);
 		$res = SQL::fetch_row($sql, $arg);
@@ -27,6 +18,13 @@ class View extends \App\Controller\Base
 			_exit_text('Not Found', 404);
 		}
 
+		$data = array(
+			'Page' => array('title' => 'Client :: Detail'),
+			'date_iso' => strftime('%Y-%m-%d'),
+			'Origin_License' => $_SESSION['License'],
+			'cost_per_hour' => 0,
+			'cost_per_mile' => 0,
+		);
 
 		$data['License'] = $res;
 		$data['Target_License'] = $res;
@@ -112,6 +110,7 @@ class View extends \App\Controller\Base
 		$data['cost_per_hour'] = floatval($C->opt('cost_per_hour'));
 		$data['cost_per_mile'] = floatval($C->opt('cost_per_mile'));
 
+		$data['contact_list'] = $this->getContactList();
 
 		//return $this->_container->pwig->render($RES, 'page/client/view.php', $data);
 		return $this->_container->view->render($RES, 'page/client/view.html', $data);
