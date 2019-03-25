@@ -65,10 +65,10 @@
 <div class="col">
 <ul class="nav nav-tabs">
 	<li class="nav-item">
-		<a class="nav-link active" data-toggle="tab" data-target="#journal-agenda-view" href="#journal-agenda-view">Agenda</a>
+		<a class="nav-link" data-toggle="tab" data-target="#journal-agenda-view" href="#journal-agenda-view" id="home-agenda">Agenda</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" data-toggle="tab" data-target="#journal-calendar-view" href="#journal-calendar-view">Calendar</a>
+		<a class="nav-link" data-toggle="tab" data-target="#journal-calendar-view" href="#journal-calendar-view" id="home-calendar">Calendar</a>
 	</li>
 </ul>
 </div>
@@ -80,9 +80,10 @@
 </div>
 </div>
 
-<div class="tab-content">
-<div class="tab-pane active" id="journal-agenda-view" style="min-height:30vh;">
+<div class="tab-content" style="min-height:50vh;">
+<div class="tab-pane" id="journal-agenda-view">
 	<div>
+		<h2>Agenda List</h2>
 	</div>
 </div>
 
@@ -127,18 +128,36 @@
 {% block foot_script %}
 {{ parent() }}
 <script>
+$(function() {
+
+	$('[data-toggle="tab"]').on('click', function() {
+		localStorage.setItem('home-tab', this.id);
+	});
+
+	$('#modal-contact-autocomplete').autocomplete({
+		source: '/contact/ajax?a=global',
+		// select: function(e, ui) {
+		// 	$('#company_id').val( ui.item.license.id );
+		// 	$('#company_name').val( ui.item.license.name );
+		// 	return(false);
+		// },
+	});
+
+	var x = localStorage.getItem('home-tab');
+	switch (x) {
+	case 'home-calendar':
+		$('#home-calendar').click();
+		break;
+	case 'home-agenda':
+	default:
+		$('#home-agenda').click();
+		break;
+	}
+
+});
+
 google.charts.setOnLoadCallback(function() {
 
-	$(function() {
-		$('#modal-contact-autocomplete').autocomplete({
-			source: '/contact/ajax?a=global',
-			// select: function(e, ui) {
-			// 	$('#company_id').val( ui.item.license.id );
-			// 	$('#company_name').val( ui.item.license.name );
-			// 	return(false);
-			// },
-		});
-	});
 
 	$.get('/chart/revenue-line', function(body) {
 
