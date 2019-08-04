@@ -53,8 +53,8 @@ class Sync extends \OpenTHC\Controller\Base
 
 		$C = new \OpenTHC\Company($_SESSION['Company']['id']);
 
-		$rce = new \OpenTHC\RCE($_SESSION['pipe-token']);
-		$res = $rce->get('/transfer/outgoing?source=true');
+		$cre = new \OpenTHC\RCE($_SESSION['pipe-token']);
+		$res = $cre->get('/transfer/outgoing?source=true');
 
 		if ('success' != $res['status']) {
 			_exit_text($res, 500);
@@ -127,16 +127,4 @@ class Sync extends \OpenTHC\Controller\Base
 
 	}
 
-	function transferItems()
-	{
-		// if (0 == count($data['transfer_item_list'])) {
-		// 	$rce = new \OpenTHC\RCE($_SESSION['pipe-token']);
-		// 	$res = $rce->get('/transfer/outgoing/' . $data['transfer']['guid']);
-		// 	var_dump($res);
-		// 	foreach ($res as $rec) {
-		// 		SQL::insert(array())
-		// 	}
-		// }
-
-	}
 }

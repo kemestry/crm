@@ -24,7 +24,7 @@ if (!is_file($cvl)) {
 }
 require_once($cvl);
 
-SQL::init('pgsql:host=45.79.109.159;dbname=openthc', 'openthc', '13bb034868c4a1545d3d63801bd2266b');
+SQL::init('pgsql:host=198.74.50.157;dbname=openthc', 'openthc', '13bb034868c4a1545d3d63801bd2266b');
 
 function _leafdata_product_type_nice($t0,$t1)
 {

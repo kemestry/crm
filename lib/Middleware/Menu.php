@@ -37,12 +37,17 @@ class Menu
 
 			$menu['main'][] = array(
 				'link' => '/transfer',
-				'html' => 'Transfers',
+				'html' => '<i class="fas fa-truck-loading"></i> Transfers',
 			);
 
 			$menu['main'][] = array(
 				'link' => '/client',
-				'html' => 'Clients',
+				'html' => '<i class="fas fa-users"></i> Clients',
+			);
+
+			$menu['main'][] = array(
+				'link' => '/vendor',
+				'html' => '<i class="fas fa-truck"></i> Vendors',
 			);
 
 			// $menu['main'][] = array(
@@ -52,7 +57,7 @@ class Menu
 
 			$menu['main'][] = array(
 				'link' => '/report',
-				'html' => 'Reports',
+				'html' => '<i class="fas fa-chart-bar"></i> Reports',
 			);
 
 			$menu['page'] = array(

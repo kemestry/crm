@@ -30,8 +30,8 @@ class Sync extends \OpenTHC\Controller\Base
 		$data['transfer'] = SQL::fetch_row($sql, $arg);
 
 
-		$rce = new \OpenTHC\RCE($_SESSION['pipe-token']);
-		$res = $rce->get('/transfer/outgoing/' . $data['transfer']['guid']);
+		$cre = new \OpenTHC\RCE($_SESSION['pipe-token']);
+		$res = $cre->get('/transfer/outgoing/' . $data['transfer']['guid']);
 		if ('success' != $res['status']) {
 			//_exit_text($res);
 			_exit_text('Failed to Load Transfer, Please Try Again', 500);
@@ -58,8 +58,8 @@ class Sync extends \OpenTHC\Controller\Base
 		}
 
 		// Load Transfer Items
-		$rce = new \OpenTHC\RCE($_SESSION['pipe-token']);
-		$res = $rce->get('/transfer/outgoing/' . $data['transfer']['guid']);
+		$cre = new \OpenTHC\RCE($_SESSION['pipe-token']);
+		$res = $cre->get('/transfer/outgoing/' . $data['transfer']['guid']);
 		if ('success' != $res['status']) {
 			_exit_text('Failed to Load Items, Please Try Again', 500);
 		}
@@ -73,7 +73,7 @@ class Sync extends \OpenTHC\Controller\Base
 		foreach ($res['result']['inventory_transfer_items'] as $rec) {
 
 			// Lookup Product
-			$res = $rce->get('/lot/' . $rec['global_inventory_id']);
+			$res = $cre->get('/lot/' . $rec['global_inventory_id']);
 			$Lot = $res['result'];
 
 			// Product+Cache
@@ -83,7 +83,7 @@ class Sync extends \OpenTHC\Controller\Base
 				$Product = json_decode($x, true);
 			}
 			if (empty($Product['global_id'])) {
-				$res = $rce->get('/config/product/' . $rec['global_inventory_type_id']);
+				$res = $cre->get('/config/product/' . $rec['global_inventory_type_id']);
 				$Product = $res['result'];
 				$RC->set('/cache/' . $rec['global_inventory_type_id'], json_encode($Product), 3600);
 			}
@@ -108,7 +108,7 @@ class Sync extends \OpenTHC\Controller\Base
 					$Strain = \json_decode($x, true);
 				}
 				if (empty($Strain['global_id'])) {
-					$res = $rce->get('/config/strain/' . $rec['global_strain_id']);
+					$res = $cre->get('/config/strain/' . $rec['global_strain_id']);
 					$Strain = $res['result'];
 					$RC->set('/cache/' . $rec['global_strain_id'], json_encode($Strain), 3600);
 				}
@@ -159,11 +159,12 @@ class Sync extends \OpenTHC\Controller\Base
 			$data['transfer']['flag'] = $data['transfer']['flag'] | \App\Transfer::FLAG_SAMPLE;
 		}
 
-		SQL::query('UPDATE crm_transfer SET flag = flag | :f1,  full_price = :p, stat = :s WHERE id = :t', array(
+		SQL::query('UPDATE crm_transfer SET flag = flag | :f1,  full_price = :p, stat = :s, completed_at = :dtC WHERE id = :t', array(
 			':t' => $data['transfer']['id'],
 			':f1' => ($data['transfer']['flag'] | \App\Transfer::FLAG_SYNC),
 			':s' => $data['transfer']['stat'],
-			':p' => $full_price
+			':p' => $full_price,
+			':dtC' => $T['_source']['transferred_at'],
 		));
 
 		//_exit_text($data['transfer']);

@@ -1,7 +1,7 @@
 <?php
 /**
-	Search Interface
-*/
+ * Contact Create
+ */
 
 namespace App\Controller\Contact;
 
@@ -38,10 +38,14 @@ class Create extends \OpenTHC\Controller\Base
 				// Insert Record into the DIRECTORY
 				$PrimeContact['id'] = SQL::insert('contact', array(
 					'company_id' => $_POST['company_id'],
-					'name' => $_POST['name'],
+					'name' => trim($_POST['name_first'] . ' ' . $_POST['name_last']),
+					'name_first' => trim($_POST['name_first']),
+					'name_last' => trim($_POST['name_list']),
 					'email' => $_POST['email'],
 					'phone' => $_POST['phone'],
 				));
+				// Use Directory API?
+				// Send Notification?
 			}
 
 			$sql = 'SELECT * FROM crm_contact WHERE company_id = :c AND email = :e';
@@ -53,7 +57,9 @@ class Create extends \OpenTHC\Controller\Base
 					'company_id_owner' => $_SESSION['gid'],
 					'company_id' => $_POST['company_id'],
 					'contact_id_prime' => $PrimeContact['id'],
-					'name' => $_POST['name'],
+					'name' => trim($_POST['name_first'] . ' ' . $_POST['name_last']),
+					'name_first' => trim($_POST['name_first']),
+					'name_last' => trim($_POST['name_list']),
 					'email' => $_POST['email'],
 					'phone' => $_POST['phone'],
 				));

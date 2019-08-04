@@ -98,6 +98,13 @@ $app->group('/client', 'App\Module\Client')
 	->add('App\Middleware\Session');
 
 
+// Create new Code with UI
+$app->group('/vendor', 'App\Module\Vendor')
+	->add('App\Middleware\Menu')
+	->add('App\Middleware\Auth')
+	->add('App\Middleware\Session');
+
+
 $app->get('/contact/ajax', 'App\Controller\Contact\Ajax')->add('App\Middleware\Session');
 $app->get('/contact/create', 'App\Controller\Contact\Create')->add('App\Middleware\Menu')->add('App\Middleware\Session');
 $app->post('/contact/create', 'App\Controller\Contact\Create')->add('App\Middleware\Menu')->add('App\Middleware\Session');
@@ -233,6 +240,44 @@ $app->group('/auth', function() {
 //->add('App\Middleware\Menu')
 ->add('App\Middleware\Session');
 
+// @see https://github.com/slimphp/Slim/issues/1456
+if ('routes' == $_GET['_dump']) {
+	$x = $app->getContainer()->get('router')->getRoutes();
+	//var_dump($x);
+
+	$y = array_reduce($x, function ($target, $route) {
+		$target[$route->getPattern()] = [
+			'methods' => json_encode($route->getMethods()),
+			//'callable' => $route->getCallable(),
+			'middlewares' => json_encode($route->getMiddleware()),
+			'pattern' => $route->getPattern(),
+		];
+		return $target;
+	}, []);
+
+	var_dump($y);
+	exit;
+}
+
 
 // Run the App
 $ret = $app->run();
+
+// @see https://github.com/slimphp/Slim/issues/1456
+if ('routes' == $_GET['_dump']) {
+	$x = $app->getContainer()->get('router')->getRoutes();
+	//var_dump($x);
+
+	$y = array_reduce($x, function ($target, $route) {
+		$target[$route->getPattern()] = [
+			'methods' => json_encode($route->getMethods()),
+			//'callable' => $route->getCallable(),
+			'middlewares' => json_encode($route->getMiddleware()),
+			'pattern' => $route->getPattern(),
+		];
+		return $target;
+	}, []);
+
+	var_dump($y);
+
+}

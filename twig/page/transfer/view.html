@@ -108,7 +108,7 @@ div.card p {
 		<td>
 			<a href="/report/product-type/{{ ti.meta.Product.global_id }}">{{ ti.meta.Item.product_type }}</a>
 			{% if ti.meta.Lot.global_lab_result_id %}
-				<small><a href="https://qa.openthc.org/share/{{ ti.meta.Lot.global_lab_result_id }}" target="_blank"><i class="fas fa-flask"></i></a></small>
+				<small><a href="https://lab.openthc.org/share/{{ ti.meta.Lot.global_lab_result_id }}" target="_blank"><i class="fas fa-flask"></i></a></small>
 			{% endif %}
 		</td>
 		<td><a href="/report/product/{{ ti.meta.Product.global_id }}">{{ ti.product }}</a>

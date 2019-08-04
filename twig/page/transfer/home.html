@@ -61,6 +61,8 @@ function doOneSync()
 	$btn.find('i').addClass('fa-spin');
 	$btn.data('sync', '1');
 	$.post('/transfer/' + $btn.data('guid') + '/sync', arg, function() {
+		// Success
+	}).always(function() {
 		$btn.find('i').removeClass('fa-spin');
 		$btn.removeClass('btn-outline-danger');
 		setTimeout(doOneSync, sync_wait);

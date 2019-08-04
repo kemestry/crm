@@ -1,11 +1,28 @@
 {% extends "layout/html-pub.html" %}
-
 {% block html_head_link %}
 {{ parent() }}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" integrity="sha256-xJOZHfpxLR/uhh1BwYFS5fhmOAdIRQaiOul5F/b7v3s=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" integrity="sha256-xJOZHfpxLR/uhh1BwYFS5fhmOAdIRQaiOul5F/b7v3s=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tributejs/3.6.0/tribute.min.css" integrity="sha256-jCuf8eDAzmPpRqt5n0v1utTOCeWZc4OrGbv24Pw+ltk=" crossorigin="anonymous">
+
 <style>
 body {
 	font-family: Verdana,-apple-system,sans-serif;
+}
+
+/**
+ * Bootstrap Override
+ */
+@media (min-width: 768px) and (max-width: 991.98px) {
+	.container {
+		max-width: 100%;
+	}
+}
+
+/**
+ * jQuery-UI Overrides
+ */
+.ui-front {
+	z-index: 2000;
 }
 
 /**
@@ -53,15 +70,6 @@ body {
 }
 
 /**
- * Bootstrap Override
- */
-@media (min-width: 768px) and (max-width: 991.98px) {
-	.container {
-		max-width: 100%;
-	}
-}
-
-/**
  * Data Tables Override
  * @type {[type]}
  */
@@ -76,6 +84,7 @@ table.dataTable {
 {{ parent() }}
 <!-- OPEN: app/layout/html.html -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js" integrity="sha256-FA14tBI8v+/1BtcH9XtJpcNbComBEpdawUZA6BPXRVw=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tributejs/3.6.0/tribute.min.js" integrity="sha256-+82P9iNsezE1dUd0g80x4dBnGF3Ua7FN2YnfTx31jXs=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
 google.charts.load("current", {packages:['bar', 'line', 'corechart' ]});

@@ -22,7 +22,18 @@ SELECT contact.*
 FROM contact
 JOIN crm_contact ON contact.id = crm_contact.contact_id_prime
 WHERE crm_contact.company_id_owner = :c0
+UNION ALL
+SELECT contact.*
+FROM contact
+WHERE contact.company_id = :c0
 SQL;
+
+		$sql = <<<SQL
+SELECT contact.*
+FROM contact
+WHERE contact.company_id = :c0
+SQL;
+
 
 		$arg = array(':c0' => $com_id);
 

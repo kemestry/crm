@@ -11,26 +11,32 @@
 </div>
 
 <div class="modal-body">
-	<div class="row">
-		<div class="col-md-6">
-		<div class="form-group">
-			<label>Contact:</label>
-			<input autocomplete="off" class="form-control" id="modal-contact-autocomplete" name="name" placeholder="Name" value="">
-		</div>
-		</div>
-		<div class="col-md-6">
-		<div class="form-group">
-			<label>Company:</label>
-			<div class="input-group">
-				<input class="form-control company-autocomplete" id="company_name" readonly value="{{ Company.name }}">
-				<input class="form-control" id="company_id" name="company_id" type="hidden" value="{{ Company.id }}">
-				<div class="input-group-append">
-					<span class="input-group-text" id="company_id_text">
-						<a href="https://directory.openthc.com/company?id={{ Company.guid }}" target="_blank"><i class="fas fa-address-book"></i></a>
-					</span>
-				</div>
+
+	<div class="form-group">
+		<label>Company:</label>
+		<div class="input-group">
+			<input class="form-control company-autocomplete" id="company_name" value="{{ Company.name }}">
+			<input class="form-control" id="company_id" name="company_id" type="hidden" value="{{ Company.id }}">
+			<div class="input-group-append">
+				<span class="input-group-text" id="company_id_text">
+					<a href="https://directory.openthc.com/company?id={{ Company.guid }}" target="_blank"><i class="fas fa-address-book"></i></a>
+				</span>
 			</div>
 		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<label>First:</label>
+				<input autocomplete="off" class="form-control" id="modal-contact-autocomplete" name="name_first" placeholder="First Name" value="{{ Contact.name_first }}">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label>Last:</label>
+				<input autocomplete="off" class="form-control" id="modal-contact-autocomplete" name="name_last" placeholder="Last Name" value="{{ Contact.name_last }}">
+			</div>
 		</div>
 	</div>
 
@@ -76,7 +82,7 @@
 			-->
 			<!-- Buyer, General Manager, Assistant Manager, Owner, Budtender, Marketing, Receiving/Returns, Billing, Other (list in notes) -->
 			<div>
-			<select class="form-control" id="contact-roles" multiple="3" name="tags" value="Sleect Magic">
+			<select class="form-control" id="contact-roles" multiple="3" name="tags" value="Select Magic">
 				<option>Primary</option>
 				<option>Manager</option>
 				<option>Owner</option>

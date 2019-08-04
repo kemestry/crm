@@ -34,7 +34,7 @@
 <script>
 $(function() {
 	$('.license-autocomplete').autocomplete({
-		source: 'https://directory.openthc.com/api/autocomplete/license?rbe=wa',
+		source: 'https://directory.openthc.com/api/autocomplete/license?cre=usa/wa',
 		select: function(e, ui) {
 			$('#license_id').val( ui.item.license.id );
 			$('#license_name').val( ui.item.license.name );

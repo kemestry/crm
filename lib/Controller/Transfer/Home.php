@@ -29,9 +29,10 @@ class Home extends \OpenTHC\Controller\Base
 		$sql = 'SELECT crm_transfer.*, license.code AS target_license_code, license.name AS target_license_name FROM crm_transfer';
 		$sql.= ' JOIN license ON crm_transfer.target_license_id = license.id';
 		$sql.= ' WHERE crm_transfer.company_id = :c';
-		$sql.= ' AND (crm_transfer.stat >= 100 AND crm_transfer.stat < 400) AND crm_transfer.completed_at IS NOT NULL';
-		$sql.= ' ORDER BY completed_at DESC';
-		//$sql.= ' LIMIT 100';
+		$sql.= ' AND (crm_transfer.stat >= 100 AND crm_transfer.stat < 400)';
+		//$sql.= ' AND crm_transfer.completed_at IS NOT NULL';
+		$sql.= ' ORDER BY created_at DESC';
+		$sql.= ' LIMIT 100';
 		$arg = array(':c' => $_SESSION['Company']['id']);
 		$res = SQL::fetch_all($sql, $arg);
 		foreach ($res as $rec) {

@@ -3,7 +3,7 @@
  * Client Home
  */
 
-namespace App\Controller\Client;
+namespace App\Controller\Vendor;
 
 use Edoceo\Radix\DB\SQL;
 
@@ -12,7 +12,7 @@ class Home extends \OpenTHC\Controller\Base
 	function __invoke($REQ, $RES,$ARG)
 	{
 		$data = array(
-			'Page' => array('title' => 'Client :: Overview'),
+			'Page' => array('title' => 'Vendor :: Overview'),
 			'client_list' => array(),
 			'type_active' => $_GET['type'] ?: 'a',
 			'type_link_a' => '?' . \http_build_query(array_merge($_GET, ['type' => 'a'])),
