@@ -209,7 +209,7 @@
 
 {% block foot_script %}
 {{ parent() }}
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}"></script>
 <!-- <script src="/js/map.js"></script> -->
 <script>
 var Origin_License_pt = new google.maps.LatLng({{ Origin_License.geo_lat }}, {{ Origin_License.geo_lon }});

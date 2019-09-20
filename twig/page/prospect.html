@@ -65,7 +65,7 @@
 {% block foot_script %}
 {{ parent() }}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs&amp;libraries=places"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&amp;libraries=places"></script>
 <script>
 var CRM_MAP = null;
 var Map_Mark_List = [];
@@ -91,7 +91,7 @@ function _license_info(mark, id)
 
 		html += '<div class="row"><div class="col">';
 		html += '<div class="btn-group btn-group-sm">';
-			html += '<a class="btn btn-outline-primary" href="https://data.openthc.org/license/revenue?id=' + body.id + '" target="_blank"><i class="fas fa-database"></i> OpenTHC</a>';
+			html += '<a class="btn btn-outline-primary" href="https://directory.openthc.com/search?q=' + body.id + '" target="_blank"><i class="fas fa-database"></i> OpenTHC</a>';
 			html += '<a class="btn btn-outline-primary" href="https://502data.com/license/' + body.code.replace(/[^\d]/, '') + '" target="_blank">502 Data</a>';
 			html += '<a class="btn btn-outline-primary" href="https://www.topshelfdata.com/business/' + body.code.replace(/[^\d]/, '') + '" target="_blank">TopShelf</a>';
 		html += '</div>';

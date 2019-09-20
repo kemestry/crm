@@ -54,7 +54,7 @@
 {% block foot_script %}
 {{ parent() }}
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVJvvpHqOFkGNKknxBsE4VuVEsdSXGJbs&amp;libraries=places"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ google_map_key }}&amp;libraries=places"></script>
 <script src="https://directory.openthc.com/js/map.js"></script>
 <script src="https://directory.openthc.com/js/map-geo.js"></script>
 <!--
@@ -154,7 +154,9 @@ function marker_window(mark)
 	html += '</a>';
 	html += '</h2>';
 	html += '<h3>License: #' + mark.data.license_code + '</h3>';
-	html += '<h3>Distance: #' + mark.data.license_dist + '</h3>';
+	if (mark.data.travel_info) {
+		html += '<h3>Travel: ' + mark.data.travel_info + '</h3>';
+	}
 	html += '</div>';
 
 	Inf.open(OPM, mark);
