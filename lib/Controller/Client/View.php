@@ -24,6 +24,7 @@ class View extends \App\Controller\Base
 			'Origin_License' => $_SESSION['License'],
 			'cost_per_hour' => 0,
 			'cost_per_mile' => 0,
+			'google_map_key' => \OpenTHC\Config::get('google.map_key'),
 		);
 
 		$data['License'] = $res;
@@ -94,7 +95,7 @@ class View extends \App\Controller\Base
 		$sql.= ' WHERE crm_transfer.company_id = :c AND target_license_id = :l';
 		//$sql.= ' AND crm_transfer.stat IN (100, 200, 301, 307)';
 		$sql.= ' GROUP BY crm_transfer.guid, crm_transfer.flag, crm_transfer.created_at, crm_transfer.completed_at, crm_transfer.stat, crm_transfer.full_price, license.code, license.name';
-		$sql.= ' ORDER BY created_at DESC';
+		$sql.= ' ORDER BY crm_transfer.created_at DESC, crm_transfer.completed_at DESC';
 		$arg = array(
 			':c' => $_SESSION['Company']['id'],
 			':l' => $data['License']['id']

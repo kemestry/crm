@@ -76,6 +76,7 @@ EOS;
 			'Page' => array('title' => 'Client :: Map'),
 			'client_list' => array(),
 			'license_type_list' => array(),
+			'google_map_key' => \OpenTHC\Config::get('google.map_key'),
 		);
 
 		$data['license_type_list'][] = array('type' => 'Retail');
