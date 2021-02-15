@@ -1,5 +1,5 @@
 {
-	"name": "openthc/fire",
+	"name": "openthc/crm",
 	"description": "OpenTHC",
 	"license": "GPL-3.0-only",
 	"autoload": {
@@ -12,21 +12,19 @@
 		"ext-bcmath": "*",
 		"ext-curl": "*",
 		"ext-date": "*",
-		"ext-gmp": "*",
 		"ext-imap": "*",
 		"ext-json": "*",
 		"ext-PDO": "*",
 		"ext-session": "*",
 		"ext-sockets": "*",
-		"casbin/casbin": "1.0.3",
 		"edoceo/radix": "dev-master",
-		"erusev/parsedown": "1.7.1",
-		"hashids/hashids": "3.0.0",
-		"league/oauth2-client": "2.4.1",
+		"erusev/parsedown-extra": "0.8.1",
+		"hashids/hashids": "4.0.0",
+		"league/oauth2-client": "2.6.0",
 		"openthc/common": "dev-master",
-		"pear/net_smtp": "1.8.1",
-		"plivo/plivo-php": "4.3.3",
-		"tuupola/base32": "0.1.1",
-		"tecnickcom/tcpdf": "6.2.26"
+		"pear/net_smtp": "1.9.2",
+		"plivo/plivo-php": "4.17.1",
+		"tuupola/base32": "1.0.0",
+		"tecnickcom/tcpdf": "6.3.5"
 	}
 }
